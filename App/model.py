@@ -61,3 +61,9 @@ def addArtist():
 
 def addArtwork():
     pass
+
+def lastArtist():
+    pass
+
+def lastArtwork():
+    pass

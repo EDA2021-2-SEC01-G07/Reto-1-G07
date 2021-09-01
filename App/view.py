@@ -52,6 +52,7 @@ operación solicitada
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
+    print("0- Salir")
 
 
 def initCatalog():
@@ -67,27 +68,38 @@ def loadData(catalog):
     """
     controller.loadData(catalog)
 
+def lastArtist():
+    """
+    Muestra los ultimos 3 artistas
+    """
+    controller.lastArtist(catalog)
 
-def printAuthorData(author):
-    if author:
-        print('Autor encontrado: ' + author['name'])
-        print('Promedio: ' + str(author['average_rating']))
-        print('Total de libros: ' + str(lt.size(author['books'])))
-        for book in lt.iterator(author['books']):
-            print('Titulo: ' + book['title'] + '  ISBN: ' + book['isbn'])
-    else:
-        print('No se encontro el autor')
+def lastArtwork():
+    """
+    Muestra las ultimas 3 obras
+    """
+    controller.lastArtwork(catalog)
+
+# def printAuthorData(author):
+#     if author:
+#         print('Autor encontrado: ' + author['name'])
+#         print('Promedio: ' + str(author['average_rating']))
+#         print('Total de libros: ' + str(lt.size(author['books'])))
+#         for book in lt.iterator(author['books']):
+#             print('Titulo: ' + book['title'] + '  ISBN: ' + book['isbn'])
+#     else:
+#         print('No se encontro el autor')
 
 
-def printBestBooks(books):
-    size = lt.size(books)
-    if size:
-        print(' Estos son los mejores libros: ')
-        for book in lt.iterator(books):
-            print('Titulo: ' + book['title'] + '  ISBN: ' +
-                  book['isbn'] + ' Rating: ' + book['average_rating'])
-    else:
-        print('No se encontraron libros')
+# def printBestBooks(books):
+#     size = lt.size(books)
+#     if size:
+#         print(' Estos son los mejores libros: ')
+#         for book in lt.iterator(books):
+#             print('Titulo: ' + book['title'] + '  ISBN: ' +
+#                   book['isbn'] + ' Rating: ' + book['average_rating'])
+#     else:
+#         print('No se encontraron libros')
 
 catalog = None
 

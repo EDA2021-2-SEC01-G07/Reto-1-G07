@@ -47,48 +47,69 @@ def loadData(catalog):
     Carga los datos de los archivos y cargar los datos en la
     estructura de datos
     """
+    loadArtist(catalog)
     loadArtWork(catalog)
-    sortArtWork(catalog)
+    
+def loadArtist(catalog):
+    """
+    Carga la información que asocia tags con libros.
+    """
+    artistfiles = cf.data_dir + 'Artists-utf8-small.csv'
+    input_file = csv.DictReader(open(artistfiles, encoding='utf-8'))
+    for authors in input_file:
+        model.addArtist(catalog, authors)
+
 
 def loadArtWork(catalog):
     """
     Carga la información que asocia tags con libros.
     """
-    booktagsfile = cf.data_dir + 'Artworks-utf8-small.csv'
-    input_file = csv.DictReader(open(booktagsfile, encoding='utf-8'))
-    for booktag in input_file:
-        model.addBookTag(catalog, booktag)
+    artfiles = cf.data_dir + 'Artworks-utf8-small.csv'
+    input_file = csv.DictReader(open(artfiles, encoding='utf-8'))
+    for artwork in input_file:
+        model.addBookTag(catalog, artwork)
 
+def lastArtist(catalog):
+    """
+    Muestra los ultimos 3 artistas
+    """
+    model.lastArtist(catalog)
+
+def lastArtwork(catalog):
+    """
+    Muestra las ultimas 3 obras
+    """
+    model.lastArtwork(catalog)
 
 # Funciones de ordenamiento
 
-def sortArtWork(catalog):
-    """
-    Ordena los libros por average_rating
-    """
-    model.sortBooks(catalog)
+# def sortArtWork(catalog):
+#     """
+#     Ordena los libros por average_rating
+#     """
+#     model.sortBooks(catalog)
 
 
 # Funciones de consulta sobre el catálogo
 
-def getArtByAuthor(catalog, authorname):
-    """
-    Retrona los libros de un autor
-    """
-    author = model.getBooksByAuthor(catalog, authorname)
-    return author
+# def getArtByAuthor(catalog, authorname):
+#     """
+#     Retrona los libros de un autor
+#     """
+#     author = model.getBooksByAuthor(catalog, authorname)
+#     return author
 
 
-def getBestBooks(catalog, number):
-    """
-    Retorna los mejores libros
-    """
-    bestbooks = model.getBestBooks(catalog, number)
-    return bestbooks
+# def getBestBooks(catalog, number):
+#     """
+#     Retorna los mejores libros
+#     """
+#     bestbooks = model.getBestBooks(catalog, number)
+#     return bestbooks
 
 
-def countBooksByTag(catalog, tag):
-    """
-    Retorna los libros que fueron etiquetados con el tag
-    """
-    return model.countBooksByTag(catalog, tag)
+# def countBooksByTag(catalog, tag):
+#     """
+#     Retorna los libros que fueron etiquetados con el tag
+#     """
+#     return model.countBooksByTag(catalog, tag)
