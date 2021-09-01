@@ -68,17 +68,18 @@ def loadData(catalog):
     """
     controller.loadData(catalog)
 
-def lastArtist():
+def lastArtist(catalog):
     """
     Muestra los ultimos 3 artistas
     """
-    controller.lastArtist(catalog)
+    return controller.lastArtist(catalog)
 
-def lastArtwork():
+def lastArtwork(catalog):
     """
     Muestra las ultimas 3 obras
     """
-    controller.lastArtwork(catalog)
+    return controller.lastArtwork(catalog)
+
 
 # def printAuthorData(author):
 #     if author:
@@ -115,8 +116,8 @@ while True:
         loadData(catalog)
         print('Numero de artistas cargados: ' + str(lt.size(catalog['artistas'])))
         print('Numero de obras cargadas: ' + str(lt.size(catalog['obras'])))
-        print('Ultimos 3 artistas: ' + str(lt.size(catalog['tags'])))
-        print('Ultimas 3 obras: ' + str(lt.size(catalog['book_tags'])))
+        print('Ultimos 3 artistas: ' + str(lastArtist(catalog)))
+        print('Ultimas 3 obras: ' + str(lastArtwork(catalog)))
 
     # elif int(inputs[0]) == 2:
     #     number = input("Buscando los TOP ?: ")

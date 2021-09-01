@@ -73,13 +73,23 @@ def lastArtist(catalog):
     """
     Muestra los ultimos 3 artistas
     """
-    model.lastArtist(catalog)
+    lista=model.lastArtist(catalog)
+    ultimos=""
+    for i in lista:
+        ultimos += str(i) + "\n"
+    return ultimos
 
 def lastArtwork(catalog):
     """
     Muestra las ultimas 3 obras
     """
-    model.lastArtwork(catalog)
+    lista= model.lastArtwork(catalog)
+    ultimos=""
+    for i in lista:
+        ultimos += str(i) + "\n"
+    return ultimos
+        
+
 
 # Funciones de ordenamiento
 
