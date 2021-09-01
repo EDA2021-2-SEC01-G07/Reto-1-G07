@@ -35,35 +35,34 @@ Se define la estructura de un catálogo de videos. El catálogo tendrá dos list
 los mismos.
 """
 
-# Construccion de modelos
-
-# Funciones para agregar informacion al catalogo
-
-# Funciones para creacion de datos
-
-# Funciones de consulta
-
-# Funciones utilizadas para comparar elementos dentro de una lista
-
-# Funciones de ordenamiento
-
 def newCatalog():
+    catalog = {
+        'artists': None,
+        'artworks': None
+    }
+    catalog['artists'] = lt.newList(datastructure='ARRAY_LIST')
+    catalog['artworks'] = lt.newList(datastructure='ARRAY_LIST')
+    
+    return catalog
+    
+def newArtist(name, biography):
+    artist = {'name': name, 'biography': biography}
+    return artist
+
+def newArtwork(catalog, artwork):
+    a = newArtwork(artwork["Title"], artwork["Date"])
+    lt.addLast(catalog['artworks'], a)
+
+def addArtist(catalog, artist):
+    a = newArtist(artist["DisplayName"], artist["ArtistBio"])
+    lt.addLast(catalog['artists'], a)
+
+def addArtwork(title, date):
+    artwork = {'title': title, 'date': date}
+    return artwork
+
+def lastArtist(catalog):
     pass
 
-def newArtist():
-    pass
-
-def newArtwork():
-    pass
-
-def addArtist():
-    pass
-
-def addArtwork():
-    pass
-
-def lastArtist():
-    pass
-
-def lastArtwork():
+def lastArtwork(catalog):
     pass
