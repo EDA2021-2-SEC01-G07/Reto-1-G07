@@ -46,3 +46,18 @@ los mismos.
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 # Funciones de ordenamiento
+
+def newCatalog():
+    pass
+
+def newArtist():
+    pass
+
+def newArtwork():
+    pass
+
+def addArtist():
+    pass
+
+def addArtwork():
+    pass
