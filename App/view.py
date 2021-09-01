@@ -34,10 +34,60 @@ se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
 
+import config as cf
+import sys
+import controller
+from DISClib.ADT import list as lt
+assert cf
+
+
+"""
+La vista se encarga de la interacción con el usuario
+Presenta el menu de opciones  y  por cada seleccion
+se hace la solicitud al controlador para ejecutar la
+operación solicitada
+"""
+
+
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
-    print("2- ")
+
+
+def initCatalog():
+    """
+    Inicializa el catalogo de libros
+    """
+    return controller.initCatalog()
+
+
+def loadData(catalog):
+    """
+    Carga los libros en la estructura de datos
+    """
+    controller.loadData(catalog)
+
+
+def printAuthorData(author):
+    if author:
+        print('Autor encontrado: ' + author['name'])
+        print('Promedio: ' + str(author['average_rating']))
+        print('Total de libros: ' + str(lt.size(author['books'])))
+        for book in lt.iterator(author['books']):
+            print('Titulo: ' + book['title'] + '  ISBN: ' + book['isbn'])
+    else:
+        print('No se encontro el autor')
+
+
+def printBestBooks(books):
+    size = lt.size(books)
+    if size:
+        print(' Estos son los mejores libros: ')
+        for book in lt.iterator(books):
+            print('Titulo: ' + book['title'] + '  ISBN: ' +
+                  book['isbn'] + ' Rating: ' + book['average_rating'])
+    else:
+        print('No se encontraron libros')
 
 catalog = None
 
@@ -49,10 +99,29 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
+        catalog = initCatalog()
+        loadData(catalog)
+        print('Numero de artistas cargados: ' + str(lt.size(catalog['artistas'])))
+        print('Numero de obras cargadas: ' + str(lt.size(catalog['obras'])))
+        print('Ultimos 3 artistas: ' + str(lt.size(catalog['tags'])))
+        print('Ultimas 3 obras: ' + str(lt.size(catalog['book_tags'])))
 
-    elif int(inputs[0]) == 2:
-        pass
+    # elif int(inputs[0]) == 2:
+    #     number = input("Buscando los TOP ?: ")
+    #     books = controller.getBestBooks(catalog, int(number))
+    #     printBestBooks(books)
+
+    # elif int(inputs[0]) == 3:
+    #     authorname = input("Nombre del autor a buscar: ")
+    #     author = controller.getBooksByAuthor(catalog, authorname)
+    #     printAuthorData(author)
+
+    # elif int(inputs[0]) == 4:
+    #     label = input("Etiqueta a buscar: ")
+    #     book_count = controller.countBooksByTag(catalog, label)
+    #     print('Se encontraron: ', book_count, ' Libros')
 
     else:
         sys.exit(0)
 sys.exit(0)
+
