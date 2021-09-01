@@ -114,10 +114,10 @@ while True:
         print("Cargando información de los archivos ....")
         catalog = initCatalog()
         loadData(catalog)
-        print('Numero de artistas cargados: ' + str(lt.size(catalog['artistas'])))
-        print('Numero de obras cargadas: ' + str(lt.size(catalog['obras'])))
-        print('Ultimos 3 artistas: ' + str(lastArtist(catalog)))
-        print('Ultimas 3 obras: ' + str(lastArtwork(catalog)))
+        print('Numero de artistas cargados: ' + str(lt.size(catalog['artists'])))
+        print('Numero de obras cargadas: ' + str(lt.size(catalog['artworks'])))
+        print('Ultimos 3 artistas:\n ' + str(lastArtist(catalog)))
+        print('Ultimas 3 obras:\n ' + str(lastArtwork(catalog)))
 
     # elif int(inputs[0]) == 2:
     #     number = input("Buscando los TOP ?: ")

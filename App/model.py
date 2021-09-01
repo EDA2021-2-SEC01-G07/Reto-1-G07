@@ -49,7 +49,11 @@ def newArtist(name, biography):
     artist = {'name': name, 'biography': biography}
     return artist
 
-def newArtwork(catalog, artwork):
+def newArtwork(title, date):
+    artwork = {'title': title, 'date': date}
+    return artwork
+
+def addArtwork(catalog, artwork):
     a = newArtwork(artwork["Title"], artwork["Date"])
     lt.addLast(catalog['artworks'], a)
 
@@ -57,12 +61,16 @@ def addArtist(catalog, artist):
     a = newArtist(artist["DisplayName"], artist["ArtistBio"])
     lt.addLast(catalog['artists'], a)
 
-def addArtwork(title, date):
-    artwork = {'title': title, 'date': date}
-    return artwork
-
 def lastArtist(catalog):
-    pass
-
+    authors = []
+    size = lt.size(catalog['artists'])
+    for n in range(1, 4):
+        authors.append(lt.getElement(catalog['artists'], size - n))
+    return authors
+    
 def lastArtwork(catalog):
-    pass
+    artworks = []
+    size = lt.size(catalog['artworks'])
+    for n in range(1, 4):
+        artworks.append(lt.getElement(catalog['artworks'], size - n))
+    return artworks

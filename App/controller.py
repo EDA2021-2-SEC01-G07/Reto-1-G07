@@ -67,7 +67,7 @@ def loadArtWork(catalog):
     artfiles = cf.data_dir + 'Artworks-utf8-small.csv'
     input_file = csv.DictReader(open(artfiles, encoding='utf-8'))
     for artwork in input_file:
-        model.addBookTag(catalog, artwork)
+        model.addArtwork(catalog, artwork)
 
 def lastArtist(catalog):
     """
