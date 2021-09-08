@@ -45,8 +45,17 @@ def newCatalog():
     
     return catalog
     
-def newArtist(name, biography):
-    artist = {'name': name, 'biography': biography}
+def newArtist(id, name, biography, nationality, gender, begin_date, end_date, wiki_id, ulan):
+    artist = {'id': id,
+    'name': name,
+    'biography': biography,
+    'nationality': nationality,
+    'gender': gender,
+    'begin_date': begin_date,
+    'end_date': end_date,
+    'wiki_id': wiki_id,
+    'ulan': ulan
+    }
     return artist
 
 def newArtwork(title, date):
@@ -58,7 +67,17 @@ def addArtwork(catalog, artwork):
     lt.addLast(catalog['artworks'], a)
 
 def addArtist(catalog, artist):
-    a = newArtist(artist["DisplayName"], artist["ArtistBio"])
+
+    a = newArtist(id=artist["ConstituentID"],
+    name=artist["DisplayName"], 
+    biography=artist["ArtistBio"],
+    nationality=artist["Nationality"],
+    gender=artist["Gender"],
+    begin_date=artist["BeginDate"],
+    end_date=artist["EndDate"],
+    wiki_id=artist["Wiki QID"],
+    ulan=artist["ULAN"])
+
     lt.addLast(catalog['artists'], a)
 
 def lastArtist(catalog):
