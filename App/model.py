@@ -51,8 +51,8 @@ def newArtist(id, name, biography, nationality, gender, begin_date, end_date, wi
     'biography': biography,
     'nationality': nationality,
     'gender': gender,
-    'begin_date': begin_date,
-    'end_date': end_date,
+    'begin_date': int(begin_date),
+    'end_date': int(end_date),
     'wiki_id': wiki_id,
     'ulan': ulan
     }

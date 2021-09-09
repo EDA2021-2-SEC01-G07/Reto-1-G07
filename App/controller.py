@@ -23,7 +23,7 @@
 import config as cf
 import model
 import csv
-
+from DISClib.ADT import list as lt
 
 """
 El controlador se encarga de mediar entre la vista y el modelo.
@@ -89,6 +89,30 @@ def lastArtwork(catalog):
         ultimos += str(i) + "\n"
     return ultimos
         
+def cronologicalArtists(catalog, beginDate, endDate):
+    catalogArtists= catalog["artists"]
+    totalArtists=0
+    foundArtists=lt.newList()
+    
+
+    for position in range(1,lt.size(catalogArtists)):
+        artist=lt.getElement(catalogArtists,position)
+        if artist["begin_date"]>=beginDate and artist["begin_date"]<=endDate:
+            if lt.size(foundArtists)<3:
+                lt.addLast(foundArtists,artist)
+                
+            totalArtists+=1
+
+    index=lt.size(catalogArtists)
+    while index!=0 and lt.size(foundArtists)<6:
+        artist=lt.getElement(catalogArtists,index)
+        if artist["begin_date"]>=beginDate and artist["begin_date"]<=endDate:
+            lt.addLast(foundArtists,artist)
+        print(index)
+        index-=1
+        
+    return (foundArtists, totalArtists)
+
 
 
 # Funciones de ordenamiento

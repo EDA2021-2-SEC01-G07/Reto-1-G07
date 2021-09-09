@@ -20,6 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+
 import config as cf
 import sys
 import controller
@@ -52,8 +53,10 @@ operación solicitada
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
+    print("2- Listar cronologicamente los artistas")
+    print("3- Listar cronologicamente las adquisiciones")
     print("0- Salir")
-
+    #No olvidar el pdf de analisis
 
 def initCatalog():
     """
@@ -118,6 +121,18 @@ while True:
         print('Numero de obras cargadas: ' + str(lt.size(catalog['artworks'])))
         print('Ultimos 3 artistas:\n ' + str(lastArtist(catalog)))
         print('Ultimas 3 obras:\n ' + str(lastArtwork(catalog)))
+
+    elif int(inputs[0])==2:
+        first=int(input("Año inicial: "))
+        last=int(input("Año final: "))
+        
+        print("="*15+ "Req No. 1 Inputs"+ "="*15)
+        print("Artist born between "+ str(first)+" and " +str(last))
+        print("="*15, "Req No. 1 Answers", "="*15)
+        cronologicalArtists=controller.cronologicalArtists(catalog,first,last)
+        print("Total de artistas: ", cronologicalArtists[1])
+        print(cronologicalArtists[0])
+        pass
 
     # elif int(inputs[0]) == 2:
     #     number = input("Buscando los TOP ?: ")
