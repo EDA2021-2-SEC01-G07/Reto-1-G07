@@ -20,7 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
-
+import datetime as dt
 import config as cf
 import sys
 import controller
@@ -118,9 +118,10 @@ while True:
         catalog = initCatalog()
         loadData(catalog)
         print('Numero de artistas cargados: ' + str(lt.size(catalog['artists'])))
-        print('Numero de obras cargadas: ' + str(lt.size(catalog['artworks'])))
-        print('Ultimos 3 artistas:\n ' + str(lastArtist(catalog)))
-        print('Ultimas 3 obras:\n ' + str(lastArtwork(catalog)))
+        print('Numero de obras cargadas: ' + str(lt.size(catalog['artworks']))+"\n")
+
+        print('Ultimos 3 artistas:\n' + str(lastArtist(catalog)))
+        print('Ultimas 3 obras:\n' + str(lastArtwork(catalog)))
 
     elif int(inputs[0])==2:
         first=int(input("Año inicial: "))
@@ -132,6 +133,27 @@ while True:
         cronologicalArtists=controller.cronologicalArtists(catalog,first,last)
         print("Total de artistas: ", cronologicalArtists[1])
         print(cronologicalArtists[0])
+        pass
+
+    elif int(inputs[0])==3:
+        firstY=int(input("Año incial: "))
+        firstM=int(input("Mes incial: "))
+        firstD=int(input("Dia inicial: "))
+        first=dt.date(firstY,firstM,firstD)
+
+        lastY=int(input("Año final: "))
+        lastM=int(input("Mes final: "))
+        lastD=int(input("Dia final: "))
+        last=dt.date(lastY,lastM,lastD)
+
+        print("="*15+ "Req No. 2 Inputs"+ "="*15)
+        print("Artwork aquired between "+ str(first)+" and " +str(last))
+        print("="*15, "Req No. 2 Answers", "="*15)
+        
+        cronologicalArtwork=controller.cronologicalArtwork(catalog, first, last)
+        print("Total of unique pieces aquired: ", cronologicalArtwork[1])
+        print("Total of artwork purchased: ", cronologicalArtwork[2])
+        print(cronologicalArtwork[0])
         pass
 
     # elif int(inputs[0]) == 2:

@@ -20,6 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+import datetime as dt 
 import config as cf
 import model
 import csv
@@ -76,7 +77,7 @@ def lastArtist(catalog):
     lista=model.lastArtist(catalog)
     ultimos=""
     for i in lista:
-        ultimos += str(i) + "\n"
+        ultimos += str(i["name"]) + "\n"
     return ultimos
 
 def lastArtwork(catalog):
@@ -86,7 +87,7 @@ def lastArtwork(catalog):
     lista= model.lastArtwork(catalog)
     ultimos=""
     for i in lista:
-        ultimos += str(i) + "\n"
+        ultimos += str(i["title"]) + "\n"
     return ultimos
         
 def cronologicalArtists(catalog, beginDate, endDate):
@@ -108,11 +109,41 @@ def cronologicalArtists(catalog, beginDate, endDate):
         artist=lt.getElement(catalogArtists,index)
         if artist["begin_date"]>=beginDate and artist["begin_date"]<=endDate:
             lt.addLast(foundArtists,artist)
-        print(index)
+        
         index-=1
         
     return (foundArtists, totalArtists)
 
+def cronologicalArtwork(catalog, beginDate, endDate):
+    catalogArtwork=catalog["artworks"]
+    totalArtwork=0
+    foundArtwork=lt.newList()
+    purchased=0
+
+
+    for position in range(1, lt.size(catalogArtwork)):
+        artwork=lt.getElement(catalogArtwork, position)
+        if artwork["date_aquired"]=="":
+            continue
+        date=artwork["date_aquired"].split("-")
+        date=dt.date(int(date[0]),int(date[1]),int(date[2]))
+        if date>=beginDate and date<=endDate:
+            lt.addLast(foundArtwork, artwork)
+            if artwork["credit_line"].lower().startswith("purchase"):
+                purchased+=1
+            totalArtwork+=1
+    
+    index=lt.size(catalogArtwork)
+    while index!=0 and lt.size(foundArtwork)<6:
+        date=artwork["date_aquired"].split("-")
+        date=dt.date(int(date[0]),int(date[1]),int(date[2]))
+        artwork=lt.getElement(catalogArtwork, index)
+        if date>=beginDate and date<=endDate:
+            lt.addLast(foundArtwork,artwork)
+        
+        index-=1
+    
+    return (foundArtwork, totalArtwork, purchased)
 
 
 # Funciones de ordenamiento
