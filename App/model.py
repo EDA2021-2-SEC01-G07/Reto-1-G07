@@ -58,16 +58,60 @@ def newArtist(id, name, biography, nationality, gender, begin_date, end_date, wi
     }
     return artist
 
-def newArtwork(title, date):
-    artwork = {'title': title, 'date': date}
+def newArtwork(id, title, constituent_id, date, medium, dimensions, credit_line,
+accession_number, classification, department, date_aquired, cataloged, url, circumference,
+depth, diameter, height, lenght, weight, width, seat_height, duration):
+    artwork = {id: id,
+    title: title,
+    constituent_id: constituent_id,
+    date: date,
+    medium: medium,
+    dimensions: dimensions,
+    credit_line: credit_line,
+    accession_number: accession_number,
+    classification: classification,
+    department: department,
+    date_aquired: date_aquired,
+    cataloged: cataloged,
+    url: url,
+    circumference: circumference,
+    depth: depth,
+    diameter: diameter,
+    height: height,
+    lenght: lenght,
+    weight: weight,
+    width: width,
+    seat_height: seat_height,
+    duration: duration
+    }
     return artwork
 
 def addArtwork(catalog, artwork):
-    a = newArtwork(artwork["Title"], artwork["Date"])
+    a = newArtwork(id=artwork["ObjectID"],
+    title=artwork["Title"],
+    constituent_id=artwork["ConstituentID"],
+    date=artwork["Date"],
+    medium=artwork["Medium"],
+    dimensions=artwork["Dimensions"],
+    credit_line=artwork["CreditLine"],
+    accession_number=artwork["AccessionNumber"],
+    classification=artwork["Classification"],
+    department=artwork["Department"],
+    date_aquired=artwork["DateAcquired"],
+    cataloged=artwork["Cataloged"],
+    url=artwork["URL"],
+    circumference=artwork["Circumference (cm)"],
+    depth=artwork["Depth (cm)"],
+    diameter=artwork["Diameter (cm)"],
+    height=artwork["Height (cm)"],
+    lenght=artwork["Length (cm)"],
+    weight=artwork["Weight (kg)"],
+    width=artwork["Width (cm)"],
+    seat_height=artwork["Seat Height (cm)"],
+    duration=artwork["Duration (sec.)"])
     lt.addLast(catalog['artworks'], a)
 
 def addArtist(catalog, artist):
-
     a = newArtist(id=artist["ConstituentID"],
     name=artist["DisplayName"], 
     biography=artist["ArtistBio"],
