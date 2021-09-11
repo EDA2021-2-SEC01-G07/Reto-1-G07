@@ -138,6 +138,9 @@ def lastArtwork(catalog):
         artworks.append(lt.getElement(catalog['artworks'], size - n))
     return artworks
 
+def catalogSample(catalog, size):
+    pass
+
 def cmpArtworkByDateAcquired(artwork1, artwork2): 
     """ 
     Devuelve verdadero (True) si el 'DateAcquired' de artwork1 es menores que el de 
