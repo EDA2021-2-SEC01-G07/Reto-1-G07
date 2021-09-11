@@ -54,8 +54,9 @@ def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
     print("2- Elegir tamaño de muestra")
-    print("3- Listar cronologicamente los artistas")
-    print("4- Listar cronologicamente las adquisiciones")
+    print("3- Elegir tipo de algoritmo de ordenamiento")
+    print("4- Listar cronologicamente los artistas")
+    print("5- Listar cronologicamente las adquisiciones")
     print("0- Salir")
     #No olvidar el pdf de analisis
 
@@ -127,9 +128,22 @@ while True:
     elif int(inputs[0])==2:
         size=int(input("Inserte el tamaño de la muestra a usar: "))
         catalogSample=controller.catalogSample(catalog,size)
-        print("Los datos de muestra fueron creados exitosamente!")
+        if catalogSample==None:
+            print("Los datos de muestra NO fueron creados exitosamente, porfavor inserte un tamaño valido")
+        else:
+            print("Los datos de muestra fueron creados exitosamente!")
         pass
+
     elif int(inputs[0])==3:
+        print("1- Insertion")
+        print("2- Shell")
+        print("3- Merge")
+        print("4- Quick Sort")
+        sort_type=int(input("Seleccion el tipo de algoritmo de ordenamiento: "))
+        controller.sortArtworks(catalogSample,sort_type)
+        pass
+
+    elif int(inputs[0])==4:
         first=int(input("Año inicial: "))
         last=int(input("Año final: "))
         
@@ -141,7 +155,7 @@ while True:
         print(cronologicalArtists[0])
         pass
 
-    elif int(inputs[0])==4:
+    elif int(inputs[0])==5:
         firstY=int(input("Año incial: "))
         firstM=int(input("Mes incial: "))
         firstD=int(input("Dia inicial: "))
