@@ -27,7 +27,8 @@
 import datetime as dt
 import config as cf
 from DISClib.ADT import list as lt
-from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Sorting import insertionsort, shellsort, mergesort, quicksort
+
 assert cf
 
 """
@@ -142,6 +143,16 @@ def catalogSample(catalog, size):
     if size > lt.size(catalog['artworks']):
         return None
     return lt.subList(catalog['artworks'], 1, size)
+
+def sortArtworks(catalog, sort_type):
+    if sort_type == 1:
+        insertionsort.sort(catalog, cmpArtworkByDateAcquired)
+    elif sort_type == 2:
+        shellsort.sort(catalog, cmpArtworkByDateAcquired)
+    elif sort_type == 3:
+        mergesort.sort(catalog, cmpArtworkByDateAcquired)
+    elif sort_type == 4:
+        quicksort.sort(catalog, cmpArtworkByDateAcquired)
 
 def cmpArtworkByDateAcquired(artwork1, artwork2): 
     """ 
