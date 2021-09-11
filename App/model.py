@@ -24,7 +24,7 @@
  * Dario Correal - Version inicial
  """
 
-
+import datetime as dt
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.Algorithms.Sorting import shellsort as sa
@@ -35,13 +35,13 @@ Se define la estructura de un catálogo de videos. El catálogo tendrá dos list
 los mismos.
 """
 
-def newCatalog():
+def newCatalog(list_type):
     catalog = {
         'artists': None,
         'artworks': None
     }
-    catalog['artists'] = lt.newList(datastructure='ARRAY_LIST')
-    catalog['artworks'] = lt.newList(datastructure='ARRAY_LIST')
+    catalog['artists'] = lt.newList(datastructure=list_type)
+    catalog['artworks'] = lt.newList(datastructure=list_type)
     
     return catalog
     
@@ -127,13 +127,28 @@ def addArtist(catalog, artist):
 def lastArtist(catalog):
     authors = []
     size = lt.size(catalog['artists'])
-    for n in range(1, 4):
+    for n in range(0,3):
         authors.append(lt.getElement(catalog['artists'], size - n))
     return authors
     
 def lastArtwork(catalog):
     artworks = []
     size = lt.size(catalog['artworks'])
-    for n in range(1, 4):
+    for n in range(0,3):
         artworks.append(lt.getElement(catalog['artworks'], size - n))
     return artworks
+
+def cmpArtworkByDateAcquired(artwork1, artwork2): 
+    """ 
+    Devuelve verdadero (True) si el 'DateAcquired' de artwork1 es menores que el de 
+    artwork2 
+    Args: 
+        artwork1: informacion de la primera obra que incluye su valor 'DateAcquired' 
+        artwork2: informacion de la segunda obra que incluye su valor 'DateAcquired' 
+    """
+    return textToDate(artwork1["date_aquired"]) < textToDate(artwork2["date_aquired"])
+
+def textToDate(text):
+    date=text.split("-")
+    date=dt.date(int(date[0]),int(date[1]),int(date[2]))
+    return date 

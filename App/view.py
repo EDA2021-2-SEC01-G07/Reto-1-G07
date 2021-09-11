@@ -58,11 +58,11 @@ def printMenu():
     print("0- Salir")
     #No olvidar el pdf de analisis
 
-def initCatalog():
+def initCatalog(list_type):
     """
     Inicializa el catalogo de libros
     """
-    return controller.initCatalog()
+    return controller.initCatalog(list_type)
 
 
 def loadData(catalog):
@@ -114,8 +114,9 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
+        list_type=int(input("Seleccione tipo de representacion de lista ArrayList (1) o LinkedList(2): \n"))
         print("Cargando información de los archivos ....")
-        catalog = initCatalog()
+        catalog = initCatalog(list_type)
         loadData(catalog)
         print('Numero de artistas cargados: ' + str(lt.size(catalog['artists'])))
         print('Numero de obras cargadas: ' + str(lt.size(catalog['artworks']))+"\n")

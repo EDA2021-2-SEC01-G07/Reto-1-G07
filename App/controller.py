@@ -32,11 +32,15 @@ El controlador se encarga de mediar entre la vista y el modelo.
 
 # Inicialización del Catálogo de libros
 
-def initCatalog():
+def initCatalog(list_type):
     """
     Llama la funcion de inicializacion del catalogo del modelo.
     """
-    catalog = model.newCatalog()
+    if list_type==1:
+        list_type="ARRAY_LIST"
+    elif list_type==2:
+        list_type=="LINKED_LIST"
+    catalog = model.newCatalog(list_type)
     return catalog
 
 
@@ -125,8 +129,7 @@ def cronologicalArtwork(catalog, beginDate, endDate):
         artwork=lt.getElement(catalogArtwork, position)
         if artwork["date_aquired"]=="":
             continue
-        date=artwork["date_aquired"].split("-")
-        date=dt.date(int(date[0]),int(date[1]),int(date[2]))
+        date=model.textToDate(artwork["date_aquired"])
         if date>=beginDate and date<=endDate:
             lt.addLast(foundArtwork, artwork)
             if artwork["credit_line"].lower().startswith("purchase"):
@@ -135,8 +138,7 @@ def cronologicalArtwork(catalog, beginDate, endDate):
     
     index=lt.size(catalogArtwork)
     while index!=0 and lt.size(foundArtwork)<6:
-        date=artwork["date_aquired"].split("-")
-        date=dt.date(int(date[0]),int(date[1]),int(date[2]))
+        date=model.textToDate(artwork["date_aquired"])
         artwork=lt.getElement(catalogArtwork, index)
         if date>=beginDate and date<=endDate:
             lt.addLast(foundArtwork,artwork)
