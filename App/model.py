@@ -26,6 +26,7 @@
 
 import datetime as dt
 import config as cf
+import time
 from DISClib.ADT import list as lt
 from DISClib.Algorithms.Sorting import insertionsort, shellsort, mergesort, quicksort
 
@@ -145,6 +146,7 @@ def catalogSample(catalog, size):
     return lt.subList(catalog['artworks'], 1, size)
 
 def sortArtworks(catalog, sort_type):
+    start_time = time.process_time()
     if sort_type == 1:
         insertionsort.sort(catalog, cmpArtworkByDateAcquired)
     elif sort_type == 2:
@@ -153,6 +155,7 @@ def sortArtworks(catalog, sort_type):
         mergesort.sort(catalog, cmpArtworkByDateAcquired)
     elif sort_type == 4:
         quicksort.sort(catalog, cmpArtworkByDateAcquired)
+    return (time.process_time() - start_time)*1000
 
 def cmpArtworkByDateAcquired(artwork1, artwork2): 
     """ 
