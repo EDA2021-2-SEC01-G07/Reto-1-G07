@@ -139,7 +139,9 @@ def lastArtwork(catalog):
     return artworks
 
 def catalogSample(catalog, size):
-    pass
+    if size > lt.size(catalog['artworks']):
+        return None
+    return lt.subList(catalog['artworks'], 1, size)
 
 def cmpArtworkByDateAcquired(artwork1, artwork2): 
     """ 
