@@ -147,7 +147,8 @@ def cronologicalArtwork(catalog, beginDate, endDate):
     
     return (foundArtwork, totalArtwork, purchased)
 
-
+def catalogSample(catalog, size):
+    return model.catalogSample(catalog,size)
 # Funciones de ordenamiento
 
 # def sortArtWork(catalog):
