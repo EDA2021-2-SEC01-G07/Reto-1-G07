@@ -140,7 +140,8 @@ while True:
         print("3- Merge")
         print("4- Quick Sort")
         sort_type=int(input("Seleccion el tipo de algoritmo de ordenamiento: "))
-        controller.sortArtworks(catalogSample,sort_type)
+        result=controller.sortArtworks(catalogSample,sort_type)
+        print("El tiempo de ejecucion fue de " ,str(result), " (mseg)")
         pass
 
     elif int(inputs[0])==4:

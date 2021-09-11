@@ -168,6 +168,9 @@ def cmpArtworkByDateAcquired(artwork1, artwork2):
     return textToDate(artwork1["date_aquired"]) < textToDate(artwork2["date_aquired"])
 
 def textToDate(text):
-    date=text.split("-")
-    date=dt.date(int(date[0]),int(date[1]),int(date[2]))
-    return date 
+    if text!="":
+        date=text.split("-")
+        date=dt.date(int(date[0]),int(date[1]),int(date[2]))
+        return date
+    else:
+        return dt.date(1,1,1)
