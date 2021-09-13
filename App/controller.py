@@ -92,21 +92,22 @@ def lastArtwork(catalog):
         
 def cronologicalArtists(catalog, beginDate, endDate):
     catalogArtists= catalog["artists"]
+    sortedArtists=model.sortArtist(catalogArtists)
     totalArtists=0
     foundArtists=lt.newList()
     
 
-    for position in range(1,lt.size(catalogArtists)):
-        artist=lt.getElement(catalogArtists,position)
+    for position in range(1,lt.size(sortedArtists)):
+        artist=lt.getElement(sortedArtists,position)
         if artist["begin_date"]>=beginDate and artist["begin_date"]<=endDate:
             if lt.size(foundArtists)<3:
                 lt.addLast(foundArtists,artist)
                 
             totalArtists+=1
 
-    index=lt.size(catalogArtists)
+    index=lt.size(sortedArtists)
     while index!=0 and lt.size(foundArtists)<6:
-        artist=lt.getElement(catalogArtists,index)
+        artist=lt.getElement(sortedArtists,index)
         if artist["begin_date"]>=beginDate and artist["begin_date"]<=endDate:
             lt.addLast(foundArtists,artist)
         
@@ -116,35 +117,31 @@ def cronologicalArtists(catalog, beginDate, endDate):
 
 def cronologicalArtwork(catalog, beginDate, endDate):
     catalogArtwork=catalog["artworks"]
+    sortedArtworks=model.sortArtworks(catalogArtwork)
     totalArtwork=0
     foundArtwork=lt.newList()
     purchased=0
 
 
-    for position in range(1, lt.size(catalogArtwork)):
-        artwork=lt.getElement(catalogArtwork, position)
+    for position in range(1, lt.size(sortedArtworks)):
+        artwork=lt.getElement(sortedArtworks, position)
         if artwork["date_aquired"]=="":
             continue
-        date=artwork["date_aquired"].split("-")
-        date=dt.date(int(date[0]),int(date[1]),int(date[2]))
+        date=model.textToDate(artwork["date_aquired"])
         if date>=beginDate and date<=endDate:
             lt.addLast(foundArtwork, artwork)
             if artwork["credit_line"].lower().startswith("purchase"):
                 purchased+=1
-            totalArtwork+=1
-    
-    index=lt.size(catalogArtwork)
+            totalArtwork+=1    
+    index=lt.size(sortedArtworks)
     while index!=0 and lt.size(foundArtwork)<6:
-        date=artwork["date_aquired"].split("-")
-        date=dt.date(int(date[0]),int(date[1]),int(date[2]))
-        artwork=lt.getElement(catalogArtwork, index)
+        date=model.textToDate(artwork["date_aquired"])
+        artwork=lt.getElement(sortedArtworks, index)
         if date>=beginDate and date<=endDate:
             lt.addLast(foundArtwork,artwork)
         
-        index-=1
-    
+        index-=1   
     return (foundArtwork, totalArtwork, purchased)
-
 
 # Funciones de ordenamiento
 

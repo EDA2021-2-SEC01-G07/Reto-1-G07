@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
-
+import prettytable as pt 
 import datetime as dt
 import config as cf
 import sys
@@ -55,6 +55,8 @@ def printMenu():
     print("1- Cargar información en el catálogo")
     print("2- Listar cronologicamente los artistas")
     print("3- Listar cronologicamente las adquisiciones")
+    print("4- Clasificar las obras de un artista por tecnica")
+    print("5- Clasificar las obras por la nacionalidad de sus creadores")
     print("0- Salir")
     #No olvidar el pdf de analisis
 
@@ -153,7 +155,15 @@ while True:
         cronologicalArtwork=controller.cronologicalArtwork(catalog, first, last)
         print("Total of unique pieces aquired: ", cronologicalArtwork[1])
         print("Total of artwork purchased: ", cronologicalArtwork[2])
-        print(cronologicalArtwork[0])
+        
+        table= pt.PrettyTable()
+        table.field_names=["ObjectID","Title","ArtistsNames","Medium","Dimensions","Date","DateAquired","URL"]
+        # table.max_width=40
+        # for n in range(1,4):
+        # line=lt.getElement(cronologicalArtwork[0],2)
+        # table.add_row([line["id"],line["title"],"None",line["medium"],line["dimensions"],line["date"],line["date_aquired"],line["url"]])
+        # print(table)
+        # print(cronologicalArtwork[0])
         pass
 
     # elif int(inputs[0]) == 2:

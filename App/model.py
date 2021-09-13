@@ -27,7 +27,10 @@
 
 import config as cf
 from DISClib.ADT import list as lt
-from DISClib.Algorithms.Sorting import shellsort as sa
+import datetime as dt
+import time
+from DISClib.Algorithms.Sorting import insertionsort, shellsort, mergesort, quicksort
+
 assert cf
 
 """
@@ -137,3 +140,38 @@ def lastArtwork(catalog):
     for n in range(1, 4):
         artworks.append(lt.getElement(catalog['artworks'], size - n))
     return artworks
+
+def sortArtworks(catalog):
+    return mergesort.sort(catalog,cmpArtworkByDateAcquired)
+
+def cmpArtworkByDateAcquired(artwork1, artwork2): 
+    """ 
+    Devuelve verdadero (True) si el 'DateAcquired' de artwork1 es menores que el de 
+    artwork2 
+    Args: 
+        artwork1: informacion de la primera obra que incluye su valor 'DateAcquired' 
+        artwork2: informacion de la segunda obra que incluye su valor 'DateAcquired' 
+    """
+    return textToDate(artwork1["date_aquired"]) < textToDate(artwork2["date_aquired"])
+
+def sortArtist(catalog):
+    return mergesort.sort(catalog,cmpArtistByDate)
+
+def cmpArtistByDate(artist1, artist2): 
+    """ 
+    Devuelve verdadero (True) si el 'DateAcquired' de artwork1 es menores que el de 
+    artwork2 
+    Args: 
+        artwork1: informacion de la primera obra que incluye su valor 'DateAcquired' 
+        artwork2: informacion de la segunda obra que incluye su valor 'DateAcquired' 
+    """
+    return artist1["begin_date"] < artist2["begin_date"]
+
+
+def textToDate(text):
+    if text!="":
+        date=text.split("-")
+        date=dt.date(int(date[0]),int(date[1]),int(date[2]))
+        return date
+    else:
+        return dt.date(1,1,1)
