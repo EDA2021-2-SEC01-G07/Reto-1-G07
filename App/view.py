@@ -131,7 +131,7 @@ while True:
         if catalogSample==None:
             print("Los datos de muestra NO fueron creados exitosamente, porfavor inserte un tamaño valido")
         else:
-            print("Los datos de muestra fueron creados exitosamente!")
+            print("Los datos de muestra fueron creados exitosamente! \n")
         pass
 
     elif int(inputs[0])==3:
