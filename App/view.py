@@ -165,7 +165,11 @@ while True:
         # print(table)
         # print(cronologicalArtwork[0])
         pass
-
+    
+    elif int(inputs[0])==5:
+        controller.sortByNationality(catalog)
+        
+        pass
     # elif int(inputs[0]) == 2:
     #     number = input("Buscando los TOP ?: ")
     #     books = controller.getBestBooks(catalog, int(number))

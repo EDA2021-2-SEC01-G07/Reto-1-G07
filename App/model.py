@@ -175,3 +175,17 @@ def textToDate(text):
         return date
     else:
         return dt.date(1,1,1)
+
+def sortByNationality(catalog):
+    artists=catalog["artists"]
+    nationalities=lt.newList(datastructure='ARRAY_LIST')
+    
+    for i in lt.iterator(artists):
+        if i["nationality"] != "":
+            lt.addLast(nationalities,i["nationality"])
+    print(nationalities)
+    pass
+# natio=lt.newList(datastructure='ARRAY_LIST')
+# lt.addLast(natio,"America")
+# if "America" in natio:
+#     print("Esta")
