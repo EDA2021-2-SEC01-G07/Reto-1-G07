@@ -122,7 +122,7 @@ while True:
         print('Numero de artistas cargados: ' + str(lt.size(catalog['artists'])))
         print('Numero de obras cargadas: ' + str(lt.size(catalog['artworks']))+"\n")
 
-        print('Ultimos 3 artistas:\n' + str(lastArtist(catalog)))
+        print('Ultimos 3 artistas:\n' + str((catalog)))
         print('Ultimas 3 obras:\n' + str(lastArtwork(catalog)))
 
     elif int(inputs[0])==2:
@@ -136,7 +136,7 @@ while True:
         print("Total de artistas: ", cronologicalArtists[1])
         print(cronologicalArtists[0])
         pass
-
+#
     elif int(inputs[0])==3:
         firstY=int(input("Año incial: "))
         firstM=int(input("Mes incial: "))
@@ -163,7 +163,7 @@ while True:
         # line=lt.getElement(cronologicalArtwork[0],2)
         # table.add_row([line["id"],line["title"],"None",line["medium"],line["dimensions"],line["date"],line["date_aquired"],line["url"]])
         # print(table)
-        # print(cronologicalArtwork[0])
+        print(lt.size(cronologicalArtwork[0]))
         pass
 
     # elif int(inputs[0]) == 2:

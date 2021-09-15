@@ -20,6 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+from DISClib.DataStructures.arraylist import getElement
 import datetime as dt 
 import config as cf
 import model
@@ -93,27 +94,21 @@ def lastArtwork(catalog):
 def cronologicalArtists(catalog, beginDate, endDate):
     catalogArtists= catalog["artists"]
     sortedArtists=model.sortArtist(catalogArtists)
-    totalArtists=0
-    foundArtists=lt.newList()
+    foundArtists=lt.newList(datastructure='ARRAY_LIST')
+    firstAndLast=lt.newList(datastructure='ARRAY_LIST')
+  
+    for artist in lt.iterator(sortedArtists):
+        if artist["begin_date"]>=beginDate and artist["begin_date"]<=endDate:
+            if lt.size(firstAndLast)<3:
+                lt.addLast(firstAndLast,artist)
+            lt.addLast(foundArtists,artist)     
+    for n in range(2,-1,-1):
+        posicion=lt.size(foundArtists)-n
+        elemento=lt.getElement(foundArtists,posicion)
+        lt.addLast(firstAndLast,elemento)
     
+    return firstAndLast,lt.size(foundArtists)
 
-    for position in range(1,lt.size(sortedArtists)):
-        artist=lt.getElement(sortedArtists,position)
-        if artist["begin_date"]>=beginDate and artist["begin_date"]<=endDate:
-            if lt.size(foundArtists)<3:
-                lt.addLast(foundArtists,artist)
-                
-            totalArtists+=1
-
-    index=lt.size(sortedArtists)
-    while index!=0 and lt.size(foundArtists)<6:
-        artist=lt.getElement(sortedArtists,index)
-        if artist["begin_date"]>=beginDate and artist["begin_date"]<=endDate:
-            lt.addLast(foundArtists,artist)
-        
-        index-=1
-        
-    return (foundArtists, totalArtists)
 
 def cronologicalArtwork(catalog, beginDate, endDate):
     catalogArtwork=catalog["artworks"]
