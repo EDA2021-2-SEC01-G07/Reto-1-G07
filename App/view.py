@@ -122,7 +122,7 @@ while True:
         print('Numero de artistas cargados: ' + str(lt.size(catalog['artists'])))
         print('Numero de obras cargadas: ' + str(lt.size(catalog['artworks']))+"\n")
 
-        print('Ultimos 3 artistas:\n' + str((catalog)))
+        print('Ultimos 3 artistas:\n' + str(lastArtist(catalog)))
         print('Ultimas 3 obras:\n' + str(lastArtwork(catalog)))
 
     elif int(inputs[0])==2:
@@ -134,7 +134,14 @@ while True:
         print("="*15, "Req No. 1 Answers", "="*15)
         cronologicalArtists=controller.cronologicalArtists(catalog,first,last)
         print("Total de artistas: ", cronologicalArtists[1])
-        print(cronologicalArtists[0])
+        # print(cronologicalArtists[0])
+        table= pt.PrettyTable()
+        table.field_names=["ConstituentID","DisplayName","BeginDate","Nationality","Gender","ArtistBio","Wiki QID","ULAN"]
+        table.max_width=30
+        for n in range(1,7):
+            line=lt.getElement(cronologicalArtists[0],n)
+            table.add_row([line["id"],line["name"],line["begin_date"],line["nationality"],line["gender"],line["biography"],line["wiki_id"],line["ulan"]])
+        print(table)
         pass
 #
     elif int(inputs[0])==3:

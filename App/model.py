@@ -130,14 +130,14 @@ def addArtist(catalog, artist):
 def lastArtist(catalog):
     authors = []
     size = lt.size(catalog['artists'])
-    for n in range(1, 4):
+    for n in range(0, 3):
         authors.append(lt.getElement(catalog['artists'], size - n))
     return authors
     
 def lastArtwork(catalog):
     artworks = []
     size = lt.size(catalog['artworks'])
-    for n in range(1, 4):
+    for n in range(0, 3):
         artworks.append(lt.getElement(catalog['artworks'], size - n))
     return artworks
 
