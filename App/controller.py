@@ -20,6 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+from prettytable import PrettyTable
 from DISClib.DataStructures.arraylist import getElement
 import datetime as dt 
 import config as cf
@@ -137,6 +138,11 @@ def cronologicalArtwork(catalog, beginDate, endDate):
         
         index-=1   
     return (foundArtwork, totalArtwork, purchased)
+
+def techniquesFromArtist(catalog, artist_name):
+    tech_dict, sorted_lengths = model.getTechniquesByArtist(catalog, artist_name)
+    pt = PrettyTable()
+
 
 # Funciones de ordenamiento
 

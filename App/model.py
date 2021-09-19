@@ -141,6 +141,40 @@ def lastArtwork(catalog):
         artworks.append(lt.getElement(catalog['artworks'], size - n))
     return artworks
 
+def getTechniquesByArtist(catalog, artist_name):
+    """
+    Retorna un diccionario con todas las tecnicas de el artista
+    como llaves y sus respectivas obras como valores
+    """
+    tech_to_artworks = {}
+    artist_id = ""
+    list_to_sort = lt.newList(datastructure='ARRAY_LIST')
+
+    for artist in lt.iterator(catalog['artists']):
+        if artist['name'] == artist_name:
+            artist_id = artist['id']
+            break
+
+    for artwork in lt.iterator(catalog['artworks']):
+        if artwork['constituent_id'] == artist_id:
+            if artwork['medium'] in tech_to_artworks:
+                tech_to_artworks[artwork['medium']].append(artwork)
+            else:
+                tech_to_artworks[artwork['medium']] = [artwork]
+
+    for technique in tech_to_artworks:
+        lt.addLast(list_to_sort, {'technique': technique, 'len': len(tech_to_artworks[technique])})
+
+    sortTechniques(list_to_sort)
+
+    return tech_to_artworks, list_to_sort
+
+def sortTechniques(techniques):
+    return mergesort.sort(techniques, cmp)
+
+def cmpTechniquesByArtworks(technique1, technique2):
+    return technique1['len'] < technique2['len']
+
 def sortArtworks(catalog):
     return mergesort.sort(catalog,cmpArtworkByDateAcquired)
 
