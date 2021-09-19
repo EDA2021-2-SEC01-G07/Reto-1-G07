@@ -25,6 +25,7 @@
  """
 
 
+from DISClib.DataStructures.arraylist import iterator
 import config as cf
 from DISClib.ADT import list as lt
 import datetime as dt
@@ -42,6 +43,7 @@ def newCatalog():
     catalog = {
         'artists': None,
         'artworks': None
+        
     }
     catalog['artists'] = lt.newList(datastructure='ARRAY_LIST')
     catalog['artworks'] = lt.newList(datastructure='ARRAY_LIST')
@@ -130,14 +132,14 @@ def addArtist(catalog, artist):
 def lastArtist(catalog):
     authors = []
     size = lt.size(catalog['artists'])
-    for n in range(1, 4):
+    for n in range(0, 3):
         authors.append(lt.getElement(catalog['artists'], size - n))
     return authors
     
 def lastArtwork(catalog):
     artworks = []
     size = lt.size(catalog['artworks'])
-    for n in range(1, 4):
+    for n in range(0, 3):
         artworks.append(lt.getElement(catalog['artworks'], size - n))
     return artworks
 
@@ -176,16 +178,127 @@ def textToDate(text):
     else:
         return dt.date(1,1,1)
 
+def cmpArtworkByNationality(artist1, artist2): 
+    return artist1["nationality"] < artist2["nationality"] #Menor a mayor
+
+def cmpNationality(natio1,natio2):
+    return natio1 < natio2 #Menor a Mayor 
+
+def cmpTotalNationalities(natio1,natio2):
+    return natio1["Artworks"]>natio2["Artworks"]  #Mayor a menor 
+
 def sortByNationality(catalog):
     artists=catalog["artists"]
-    nationalities=lt.newList(datastructure='ARRAY_LIST')
+    artworks=catalog["artworks"]
+    nationality_list=lt.newList(datastructure="ARRAY_LIST")
+
+    for ids in lt.iterator(artworks):
+        code=ids["constituent_id"]
+        mod=code.replace("[","").replace("]","").replace(" ","").split(",")
+        getNationalities(artists,mod,nationality_list)
     
-    for i in lt.iterator(artists):
-        if i["nationality"] != "":
-            lt.addLast(nationalities,i["nationality"])
-    print(nationalities)
+    countedNationalities=countNationalities(nationality_list) #Array con todas las nacionalidades y cuantas obras de arte expusieron
+    # print(countedNationalities)   
+    top=lt.getElement(countedNationalities,1)["Nationality"]
+    codes=searchCodes(artists, artworks, top) #Array en donde cada elemento contiene codigo de la obra y sus artistas Si hay almenos uno que sea de la nacionalidad mas repetida.    
+    # print(codes)
+    
+    
+    
+    # artwork_info=lt.newList(datastructure="ARRAY_LIST")
+    first=lt.subList(codes,1,3)
+    last=lt.subList(codes,lt.size(codes)-3,3)
+    # searchInfo(first,last,artists, artworks)
+
+    # print(first)
+    # print(last)
+    # top_pais=lt.newList(datastructure="ARRAY_LIST")
+    # for artwork in lt.iterator(artwork):
+    #     if artwork["nationality"]==top:
+    #         lt.addLast(top_pais, artwork)
+    # first=lt.subList(top_pais,1,3)
+    # last=lt.subList(top_pais,lt.size-3,3)
+    # print(top)
+    return countedNationalities
+
+def getNationalities(artists, code, nationality_list):
+    """
+        Recibe el catalago de artistas, la lista con los codigos de los artistas para una obra
+        Añade al array nationality_list la nacionalidad de los artistas que crearon la obra.
+    """
+    for artist_id in code:
+        for n in lt.iterator(artists):
+            nationality=n["nationality"]
+            current_id=n["id"]
+            if nationality=="" or nationality =="Nationality unknown":
+                nationality="Unknown"
+            if artist_id==current_id:                
+                lt.addLast(nationality_list,nationality)
     pass
-# natio=lt.newList(datastructure='ARRAY_LIST')
-# lt.addLast(natio,"America")
-# if "America" in natio:
-#     print("Esta")
+
+def countNationalities(nationality_list):
+    """
+    Cuenta cuantas veces aparece cada nacionalidad en el array nationality_list
+    Retorna un array con cada nacionalidad y cuantas obras de arte tiene. 
+    """
+    countedNationalities=lt.newList(datastructure="ARRAY_LIST")
+    sortedNationalities=mergesort.sort(nationality_list,cmpNationality)
+    anterior=lt.getElement(sortedNationalities,1)
+    contador=0
+    for nationality in lt.iterator(sortedNationalities):
+        if nationality==anterior:
+            contador+=1
+        elif nationality!=anterior:
+            nationalities={"Nationality":None,"Artworks":None}
+            nationalities["Nationality"]=anterior
+            nationalities["Artworks"]=contador
+            lt.addLast(countedNationalities,nationalities)
+            contador=1
+            anterior=nationality
+        
+    countedNationalities=mergesort.sort(countedNationalities,cmpTotalNationalities)
+    return countedNationalities
+
+def searchCodes(artists, artworks, top):
+    """
+    Busca cada codigo, si encuentra que un artista es de la nacionalidad con mas obras de arte.
+    Añade al array artWorkCodes el codigo de la obra junto con los codigos de todos los artistas que participaron.
+    """
+    artWorkCodes=lt.newList(datastructure="ARRAY_LIST")
+    for ids in lt.iterator(artworks):
+        # pos=lt.isPresent(artworks,ids)
+        print(ids)
+        code=ids["constituent_id"]
+        artwork_id=ids["id"]
+        code=code.replace("[","").replace("]","").replace(" ","").split(",")
+        for artist_id in code: 
+            for n in lt.iterator(artists):
+                nationality=n["nationality"]
+                current_id=n["id"] 
+                if artist_id == current_id and top==nationality:
+                    artwork={"ID":artwork_id,"Artists":code}
+                    lt.addLast(artWorkCodes,artwork)
+    return artWorkCodes
+
+def searchInfo(first,last,artists,artworks):
+    info=lt.newList(datastructure="ARRAY_LIST")
+    
+    for codes in lt.iterator(first):
+        element={
+            "ObjectID":None,
+            "Title": None,
+            "ArtistsNames":None,
+            "Medium":None,
+            "Date":None,
+            "Dimensions":None,
+            "Department":None,
+            "Classification":None,
+            "URL":None
+            }
+        work_id=codes["ID"]
+        artists=codes["Artists"]
+        # pos=lt.isPresent(artworks,work_id)
+        # print(pos)
+        
+    pass
+

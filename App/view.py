@@ -167,24 +167,8 @@ while True:
         pass
     
     elif int(inputs[0])==5:
-        controller.sortByNationality(catalog)
-        
+        nationalities=controller.sortByNationality(catalog)        
         pass
-    # elif int(inputs[0]) == 2:
-    #     number = input("Buscando los TOP ?: ")
-    #     books = controller.getBestBooks(catalog, int(number))
-    #     printBestBooks(books)
-
-    # elif int(inputs[0]) == 3:
-    #     authorname = input("Nombre del autor a buscar: ")
-    #     author = controller.getBooksByAuthor(catalog, authorname)
-    #     printAuthorData(author)
-
-    # elif int(inputs[0]) == 4:
-    #     label = input("Etiqueta a buscar: ")
-    #     book_count = controller.countBooksByTag(catalog, label)
-    #     print('Se encontraron: ', book_count, ' Libros')
-
     else:
         sys.exit(0)
 sys.exit(0)
