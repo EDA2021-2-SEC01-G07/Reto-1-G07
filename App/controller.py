@@ -142,6 +142,7 @@ def cronologicalArtwork(catalog, beginDate, endDate):
         
         index-=1   
     return (foundArtwork, totalArtwork, purchased)
+
 def sortByNationality(catalog):
     return model.sortByNationality(catalog)
     

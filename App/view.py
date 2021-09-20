@@ -167,7 +167,19 @@ while True:
         pass
     
     elif int(inputs[0])==5:
-        nationalities=controller.sortByNationality(catalog)        
+        nationalities=controller.sortByNationality(catalog)
+        print("="*15+ "Req No. 4 Inputs"+ "="*15)
+        print("Ranking countries by their number of artworks in the MoMA...\n")
+        print("="*15, "Req No. 4 Answers", "="*15)
+        print("The TOP 10 Countries in the MoMA are:")
+        
+        table= pt.PrettyTable()
+        table.field_names=["Nationality","Artworks"]
+        table.max_width=30
+        for n in range(1,11):
+            line=lt.getElement(nationalities,n)
+            table.add_row([line["Nationality"],line["Artworks"]])
+        print(table)       
         pass
     else:
         sys.exit(0)
