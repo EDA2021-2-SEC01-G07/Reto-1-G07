@@ -140,8 +140,8 @@ def cronologicalArtwork(catalog, beginDate, endDate):
     return (foundArtwork, totalArtwork, purchased)
 
 def techniquesFromArtist(catalog, artist_name):
-    tech_dict, sorted_lengths = model.getTechniquesByArtist(catalog, artist_name)
-    pt = PrettyTable()
+    medium_dict, sorted_lengths = model.getTechniquesByArtist(catalog, artist_name)
+    return sorted_lengths, medium_dict[sorted_lengths[0]['medium']]
 
 
 # Funciones de ordenamiento

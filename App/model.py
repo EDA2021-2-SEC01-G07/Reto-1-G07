@@ -141,12 +141,12 @@ def lastArtwork(catalog):
         artworks.append(lt.getElement(catalog['artworks'], size - n))
     return artworks
 
-def getTechniquesByArtist(catalog, artist_name):
+def getMediumsByArtist(catalog, artist_name):
     """
     Retorna un diccionario con todas las tecnicas de el artista
     como llaves y sus respectivas obras como valores
     """
-    tech_to_artworks = {}
+    medium_artworks = {}
     artist_id = ""
     list_to_sort = lt.newList(datastructure='ARRAY_LIST')
 
@@ -156,23 +156,22 @@ def getTechniquesByArtist(catalog, artist_name):
             break
 
     for artwork in lt.iterator(catalog['artworks']):
-        if artwork['constituent_id'] == artist_id:
-            if artwork['medium'] in tech_to_artworks:
-                tech_to_artworks[artwork['medium']].append(artwork)
+        raw_ids = artwork['constituent_id']
+        ids = raw_ids[1:len(raw_ids)].replace(' ', '').split(',')
+        if artist_id in ids:
+            if artwork['medium'] in medium_artworks:
+                medium_artworks[artwork['medium']].append(artwork)
             else:
-                tech_to_artworks[artwork['medium']] = [artwork]
+                medium_artworks[artwork['medium']] = [artwork]
 
-    for technique in tech_to_artworks:
-        lt.addLast(list_to_sort, {'technique': technique, 'len': len(tech_to_artworks[technique])})
+    for key in medium_artworks:
+        lt.addLast(list_to_sort, {'medium': key, 'len': len(medium_artworks[key])})
 
-    sortTechniques(list_to_sort)
+    mergesort.sort(list_to_sort, cmpMediumsByArtworks)
 
-    return tech_to_artworks, list_to_sort
+    return medium_artworks, list_to_sort
 
-def sortTechniques(techniques):
-    return mergesort.sort(techniques, cmp)
-
-def cmpTechniquesByArtworks(technique1, technique2):
+def cmpMediumsByArtworks(technique1, technique2):
     return technique1['len'] < technique2['len']
 
 def sortArtworks(catalog):

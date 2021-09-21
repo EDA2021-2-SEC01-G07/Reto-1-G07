@@ -49,6 +49,8 @@ se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
 
+catalog = None
+
 
 def printMenu():
     print("Bienvenido")
@@ -59,6 +61,11 @@ def printMenu():
     print("5- Clasificar las obras por la nacionalidad de sus creadores")
     print("0- Salir")
     #No olvidar el pdf de analisis
+
+def printArtistMediums():
+    print("=============== Req No. 3 Inputs ===============")
+    artist = input("Examine the work of the artist named: ")
+    controller.techniquesFromArtist(catalog, )
 
 def initCatalog():
     """
@@ -106,8 +113,6 @@ def lastArtwork(catalog):
 #                   book['isbn'] + ' Rating: ' + book['average_rating'])
 #     else:
 #         print('No se encontraron libros')
-
-catalog = None
 
 """
 Menu principal
@@ -165,6 +170,8 @@ while True:
         # print(table)
         print(lt.size(cronologicalArtwork[0]))
         pass
+    elif int(inputs[0])==4:
+        printArtistMediums()
 
     # elif int(inputs[0]) == 2:
     #     number = input("Buscando los TOP ?: ")
