@@ -172,22 +172,34 @@ while True:
         # print(table)
         print(lt.size(cronologicalArtwork[0]))
         pass
-
-    # elif int(inputs[0]) == 2:
-    #     number = input("Buscando los TOP ?: ")
-    #     books = controller.getBestBooks(catalog, int(number))
-    #     printBestBooks(books)
-
-    # elif int(inputs[0]) == 3:
-    #     authorname = input("Nombre del autor a buscar: ")
-    #     author = controller.getBooksByAuthor(catalog, authorname)
-    #     printAuthorData(author)
-
-    # elif int(inputs[0]) == 4:
-    #     label = input("Etiqueta a buscar: ")
-    #     book_count = controller.countBooksByTag(catalog, label)
-    #     print('Se encontraron: ', book_count, ' Libros')
-
+    
+    elif int(inputs[0])==5:
+        nationalities=controller.sortByNationality(catalog)
+        print("="*15+ "Req No. 4 Inputs"+ "="*15)
+        print("Ranking countries by their number of artworks in the MoMA...\n")
+        print("="*15, "Req No. 4 Answers", "="*15)
+        print("The TOP 10 Countries in the MoMA are:")
+        
+        table= pt.PrettyTable()
+        table.field_names=["Nationality","Artworks"]
+        table.max_width=30
+        for n in range(1,11):
+            line=lt.getElement(nationalities[0],n)
+            table.add_row([line["nationality"],line["Artworks"]])
+        print(table)     
+        print("\nThe TOP nacionality in the museum is",nationalities[2],"with", nationalities[3],"unique pieces.")
+        print("The first and last 3 objects in the",nationalities[2],"artwork list are:")  
+        table2=pt.PrettyTable()
+        table2.field_names=["ObjectID","Title","ArtistsNames","Medium","Date","Dimensions","Department","Classification","URL"]
+        
+        for n in lt.iterator(nationalities[1]):
+            nombres=str(n["Names"])
+            nombres=nombres[1:len(nombres)-1].replace("'","")
+            table2.add_row([n["id"],n["title"],nombres,n["medium"],n["date"],n["dimensions"],n["department"],n["classification"],n["url"]])
+        table2.align="l"
+        table2._max_width={"ObjectID":17,"Title":17,"ArtistsNames":18,"Medium":18,"Date":17,"Dimensions":18,"Department":15,"Classification":17,"URL":22}
+        print(table2)
+        pass
     else:
         sys.exit(0)
 sys.exit(0)

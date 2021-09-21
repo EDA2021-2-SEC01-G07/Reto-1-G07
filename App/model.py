@@ -25,6 +25,7 @@
  """
 
 
+from DISClib.DataStructures.arraylist import iterator
 import config as cf
 from DISClib.ADT import list as lt
 import datetime as dt
@@ -42,6 +43,7 @@ def newCatalog():
     catalog = {
         'artists': None,
         'artworks': None
+        
     }
     catalog['artists'] = lt.newList(datastructure='ARRAY_LIST')
     catalog['artworks'] = lt.newList(datastructure='ARRAY_LIST')
@@ -175,3 +177,77 @@ def textToDate(text):
         return date
     else:
         return dt.date(1,1,1)
+
+def cmpArtworkByNationality(artist1, artist2): 
+    return artist1["nationality"] < artist2["nationality"] #Menor a mayor
+
+def cmpNationality(natio1,natio2):
+    return natio1 < natio2 #Menor a Mayor 
+
+def cmpTotalNationalities(natio1,natio2):
+    return natio1["Artworks"]>natio2["Artworks"]  #Mayor a menor 
+
+def sortByNationality(catalog):
+    artists=catalog["artists"]
+    artworks=catalog["artworks"]
+    nationalities_dict={}
+    list_of_nationalities=lt.newList(datastructure="ARRAY_LIST")
+    artits_dict=creatArtistDict(artists)
+
+    for artwork in lt.iterator(artworks):
+        code=artwork["constituent_id"] 
+        code=code[1:len(code)-1].replace(" ","").split(",")
+        for artist_id in code:
+            nationality=artits_dict[artist_id]["nationality"]
+            if nationality=="" or nationality =="Nationality unknown":
+                nationality="Unknown"
+            if nationality in nationalities_dict:
+                nationalities_dict[nationality].append(artwork)
+            else:
+                nationalities_dict[nationality]=[artwork]
+    
+    for nationality in nationalities_dict:
+        lt.addLast(list_of_nationalities,{"nationality":nationality,"Artworks":len(nationalities_dict[nationality])})
+    
+    sorted_nationalities=mergesort.sort(list_of_nationalities,cmpTotalNationalities)
+    top=lt.getElement(sorted_nationalities,1)["nationality"]
+    
+    matching_artworks=lt.newList(datastructure="ARRAY_LIST")
+    nationality_artwork=nationalities_dict[top]
+    artwork_id=None
+    for i in nationality_artwork:
+        if i["id"]!=artwork_id:
+            lt.addLast(matching_artworks,i)
+            artwork_id=i["id"]
+    
+    artwork_count=lt.size(matching_artworks)
+    
+    joined=lt.newList(datastructure="ARRAY_LIST")
+    first=lt.subList(matching_artworks,1,3)
+    last=lt.subList(matching_artworks,lt.size(matching_artworks)-3,3)
+    for i in lt.iterator(first):
+        lt.addLast(joined,i)
+    for n in lt.iterator(last):
+        lt.addLast(joined,n)
+    
+    for artwork in lt.iterator(joined):
+        names=[]
+        if artwork["url"]=="":
+            artwork["url"]="Unknown"
+        code=artwork["constituent_id"]
+        code=code[1:len(code)-1].replace(" ","").split(",")
+        for artist_id in code:
+            names.append(artits_dict[artist_id]["name"])
+        artwork["Names"]=names
+    
+    return sorted_nationalities, joined, top, artwork_count
+
+def creatArtistDict(artists):
+    """
+    Crea un diccionario donde la llave es el ID del artista y el valor es otro diccionario con toda la informacion del artista.
+    """
+    artits_dict={}
+    for artist in lt.iterator(artists):
+        artist_id=artist["id"]
+        artits_dict[artist_id]=artist
+    return artits_dict
