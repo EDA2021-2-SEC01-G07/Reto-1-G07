@@ -182,7 +182,16 @@ while True:
         print(table)     
         print("\nThe TOP nacionality in the museum is",nationalities[2],"with", nationalities[3],"unique pieces.")
         print("The first and last 3 objects in the",nationalities[2],"artwork list are:")  
-        print(nationalities[1])
+        table2=pt.PrettyTable()
+        table2.field_names=["ObjectID","Title","ArtistsNames","Medium","Date","Dimensions","Department","Classification","URL"]
+        table2.align="l"
+        for n in lt.iterator(nationalities[1]):
+            nombres=str(n["Names"])
+            nombres=nombres[1:len(nombres)-1].replace("'","")
+            table2.add_row([n["id"],n["title"],nombres,n["medium"],n["date"],n["dimensions"],n["department"],n["classification"],n["url"]])
+        table2._max_width={"ObjectID":17,"Title":17,"ArtistsNames":18,"Medium":18,"Date":17,"Dimensions":18,"Department":15,"Classification":17,"URL":22}
+
+        print(table2)
         pass
     else:
         sys.exit(0)
