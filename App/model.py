@@ -192,26 +192,118 @@ def sortByNationality(catalog):
     artworks=catalog["artworks"]
     nationality_list=lt.newList(datastructure="ARRAY_LIST")
 
-    for ids in lt.iterator(artworks):
-        code=ids["constituent_id"]
-        mod=code.replace("[","").replace("]","").replace(" ","").split(",")
-        getNationalities(artists,mod,nationality_list)
+    artits_dict={}#La llave es el ID del artista, el valor es otro diccionario con toda la informacion del artista.
+    nationalities_dict={}
+    list_of_nationalities=lt.newList(datastructure="ARRAY_LIST")
+    for artist in lt.iterator(artists):
+        artist_id=artist["id"]
+        nationality=artist["nationality"]
+        artits_dict[artist_id]=artist
     
-    countedNationalities=countNationalities(nationality_list) #Array con todas las nacionalidades y cuantas obras de arte expusieron
-    print("nationality_list",nationality_list)
-    print("countedNationality",countedNationalities)
-    top=lt.getElement(countedNationalities,1)["Nationality"]
-    codes=searchCodes(artists, artworks, top) #Array en donde cada elemento contiene codigo de la obra y sus artistas Si hay almenos uno que sea de la nacionalidad mas repetida.    
-    # print(codes)
+    for artwork in lt.iterator(artworks):
+        code=artwork["constituent_id"] 
+        code=code[1:len(code)-1].replace(" ","").split(",")
+        for artist_id in code:
+            nationality=artits_dict[artist_id]["nationality"]
+            if nationality=="" or nationality =="Nationality unknown":
+                nationality="Unknown"
+            if nationality in nationalities_dict:
+                nationalities_dict[nationality].append(artwork)
+            else:
+                nationalities_dict[nationality]=[artwork]
     
-    first=lt.subList(codes,1,3)
-    last=lt.subList(codes,lt.size(codes)-3,3)
-    # join=lt.addLast(first,last)
+    for nationality in nationalities_dict:
+        lt.addLast(list_of_nationalities,{"nationality":nationality,"Artworks":len(nationalities_dict[nationality])})
+    
+    sorted_nationalities=mergesort.sort(list_of_nationalities,cmpTotalNationalities)
+    top=lt.getElement(sorted_nationalities,1)["nationality"]
+    
+    matching_artworks=lt.newList(datastructure="ARRAY_LIST")
+    nationality_artwork=nationalities_dict[top]
+    artwork_id=None
+    for i in nationality_artwork:
+        if i["id"]!=artwork_id:
+            lt.addLast(matching_artworks,i)
+            artwork_id=i["id"]
+    artwork_count=lt.size(matching_artworks)
+    joined=lt.newList(datastructure="ARRAY_LIST")
+    first=lt.subList(matching_artworks,1,3)
+    last=lt.subList(matching_artworks,lt.size(matching_artworks)-3,3)
+    for i in lt.iterator(first):
+        lt.addLast(joined,i)
+    for n in lt.iterator(last):
+        lt.addLast(joined,n)
+    
+    
+    
+    # for artwork in total:
+    #     names=[]
+    #     code=artwork["constituent_id"]
+    #     code=code[1:len(code)-1].replace(" ","").split(",")
+    #     print(code)
+    #     for artist_id in code:
+            
+    #         names.append(artits_dict[artist_id]["name"])
+    #     artwork["Names"]=names
+    # print(total)
+    
+# ======================================================================================================================================
+    # for artwork in lt.iterator(artworks):
+    #     names=[]
+    #     code=artwork["constituent_id"]
+    #     code=code[1:len(code)-1].replace(" ","").split(",")
+    #     for artist_id in code:
+    #         if artits_dict[artist_id]["nationality"] == top:
+    #                 element={
+    #                     "ObjectID":artwork["id"],
+    #                     "Title": artwork["title"],
+    #                     "ArtistsNames":artits_dict[artist_id]["name"],
+    #                     "Medium":artwork["medium"],
+    #                     "Date":artwork["date"],
+    #                     "Dimensions":artwork["dimensions"],
+    #                     "Department":artwork["department"],
+    #                     "Classification":artwork["classification"],
+    #                     "URL":artwork["url"]
+    #                     }
+                
+    #         for artist in lt.iterator(artists):
+    #             if artist["id"]==artist_id:
+    #                 names.append(artist["name"])
+    #         element["ArtistsNames"]=names
+    #         lt.addLast(matching_artworks, element)
+    
+    # joined=lt.newList(datastructure="ARRAY_LIST")
+    # first=lt.subList(matching_artworks,1,3)
+    # last=lt.subList(matching_artworks,lt.size(matching_artworks)-3,3)
+    # for i in lt.iterator(first):
+    #     lt.addLast(joined,i)
+    # for n in lt.iterator(last):
+    #     lt.addLast(joined,n)
+    # print(joined)
+
+
+# ===================================================================================================
+    # for ids in lt.iterator(artworks):
+    #     code=ids["constituent_id"]
+    #     mod=code.replace("[","").replace("]","").replace(" ","").split(",")
+    #     getNationalities(artists,mod,nationality_list)
+    
+    
+    # countedNationalities=countNationalities(nationality_list) #Array con todas las nacionalidades y cuantas obras de arte expusieron
+
+    # top=lt.getElement(countedNationalities,1)["Nationality"]
+    # codes=searchCodes(artists, artworks, top) #Array en donde cada elemento contiene codigo de la obra y sus artistas Si hay almenos uno que sea de la nacionalidad mas repetida.    
+    # # print(codes)
+    # join=lt.newList(datastructure="ARRAY_LIST")
+    # first=lt.subList(codes,1,3)
+    # last=lt.subList(codes,lt.size(codes)-3,3)
+    
+    
     # print("join",join)
-    info=searchInfo(first,last,artists, artworks)
+    # info=searchInfo(first,last,artists, artworks)
     # print(info)
 
-    return countedNationalities
+    return sorted_nationalities, joined, top, artwork_count
 
 def getNationalities(artists, code, nationality_list):
     """

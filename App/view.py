@@ -177,9 +177,12 @@ while True:
         table.field_names=["Nationality","Artworks"]
         table.max_width=30
         for n in range(1,11):
-            line=lt.getElement(nationalities,n)
-            table.add_row([line["Nationality"],line["Artworks"]])
-        print(table)       
+            line=lt.getElement(nationalities[0],n)
+            table.add_row([line["nationality"],line["Artworks"]])
+        print(table)     
+        print("\nThe TOP nacionality in the museum is",nationalities[2],"with", nationalities[3],"unique pieces.")
+        print("The first and last 3 objects in the",nationalities[2],"artwork list are:")  
+        print(nationalities[1])
         pass
     else:
         sys.exit(0)
