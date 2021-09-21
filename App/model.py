@@ -192,13 +192,11 @@ def sortByNationality(catalog):
     artworks=catalog["artworks"]
     nationality_list=lt.newList(datastructure="ARRAY_LIST")
 
-    artits_dict={}#La llave es el ID del artista, el valor es otro diccionario con toda la informacion del artista.
+    #La llave es el ID del artista, el valor es otro diccionario con toda la informacion del artista.
     nationalities_dict={}
     list_of_nationalities=lt.newList(datastructure="ARRAY_LIST")
-    for artist in lt.iterator(artists):
-        artist_id=artist["id"]
-        nationality=artist["nationality"]
-        artits_dict[artist_id]=artist
+    artits_dict=creatArtistDict(artists)
+
     
     for artwork in lt.iterator(artworks):
         code=artwork["constituent_id"] 
@@ -247,3 +245,10 @@ def sortByNationality(catalog):
         artwork["Names"]=names
     
     return sorted_nationalities, joined, top, artwork_count
+
+def creatArtistDict(artists):
+    artits_dict={}
+    for artist in lt.iterator(artists):
+        artist_id=artist["id"]
+        artits_dict[artist_id]=artist
+    return artits_dict
