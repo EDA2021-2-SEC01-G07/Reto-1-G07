@@ -20,10 +20,6 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
-from DISClib.Algorithms.Sorting.mergesort import sort
-from prettytable import PrettyTable
-from DISClib.DataStructures.arraylist import getElement
-import datetime as dt 
 import config as cf
 import model
 import csv
@@ -148,37 +144,3 @@ def sortByNationality(catalog):
     
 def techniquesFromArtist(catalog, artist):
     return model.getMediumsByArtist(catalog, artist)
-
-
-# Funciones de ordenamiento
-
-# def sortArtWork(catalog):
-#     """
-#     Ordena los libros por average_rating
-#     """
-#     model.sortBooks(catalog)
-
-
-# Funciones de consulta sobre el catálogo
-
-# def getArtByAuthor(catalog, authorname):
-#     """
-#     Retrona los libros de un autor
-#     """
-#     author = model.getBooksByAuthor(catalog, authorname)
-#     return author
-
-
-# def getBestBooks(catalog, number):
-#     """
-#     Retorna los mejores libros
-#     """
-#     bestbooks = model.getBestBooks(catalog, number)
-#     return bestbooks
-
-
-# def countBooksByTag(catalog, tag):
-#     """
-#     Retorna los libros que fueron etiquetados con el tag
-#     """
-#     return model.countBooksByTag(catalog, tag)

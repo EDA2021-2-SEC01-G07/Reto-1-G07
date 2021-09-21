@@ -24,12 +24,9 @@
  * Dario Correal - Version inicial
  """
 
-
-from DISClib.DataStructures.arraylist import newList
 import config as cf
 from DISClib.ADT import list as lt
 import datetime as dt
-import time
 from DISClib.Algorithms.Sorting import mergesort
 from typing import Tuple, Dict, Callable
 
@@ -277,7 +274,7 @@ def sortByNationality(catalog):
     artworks=catalog["artworks"]
     nationalities_dict={}
     list_of_nationalities=lt.newList(datastructure="ARRAY_LIST")
-    artits_dict=creatArtistDict(artists)
+    artits_dict=createArtistDict(artists)
 
     for artwork in lt.iterator(artworks):
         code=artwork["constituent_id"] 
@@ -327,7 +324,7 @@ def sortByNationality(catalog):
     
     return sorted_nationalities, joined, top, artwork_count
 
-def creatArtistDict(artists):
+def createArtistDict(artists):
     """
     Crea un diccionario donde la llave es el ID del artista y el valor es otro diccionario con toda la informacion del artista.
     """
