@@ -63,9 +63,46 @@ def printMenu():
     #No olvidar el pdf de analisis
 
 def printArtistMediums():
+    global catalog
     print("=============== Req No. 3 Inputs ===============")
     artist = input("Examine the work of the artist named: ")
-    controller.techniquesFromArtist(catalog, )
+    top_bot_artworks, sorted_list, total_artworks = controller.techniquesFromArtist(catalog, artist)
+    artist_data = controller.getArtist(catalog, artist)
+    artist_id = artist_data['id']
+    print("\n=============== Req No. 3 Answer ===============")
+    print(f'{artist} with MoMA ID {artist_id} has {total_artworks} in his/her name at the museum')
+    print(f'There are {lt.size(sorted_list)} different mediums/techniques in his/her work.\n')
+    print(f'Her/His top 5 Medium/Technique are:')
+    tb = pt.PrettyTable()
+    tb.field_names = ['MediumName', 'Count']
+
+    done = 1
+    while done < 6:
+        element = lt.getElement(sorted_list, done)
+        tb.add_row([element['medium'], element['len']])
+        done += 1
+    
+    tb.align['MediumName'] = 'l'
+    tb.align['Count'] = 'r'
+    
+    print(tb)
+
+    top_element = lt.getElement(sorted_list, 1)
+    top_medium = top_element['medium']
+    top_length = top_element['len']
+
+    print(f'\nHis/Her most used Medium/Technique is: {top_medium} with {top_length}.')
+    print(f'A sample of {top_length} {top_medium} from the collection are:')
+
+    tb = pt.PrettyTable()
+    tb.field_names = ['ObjectID', 'Title', 'Medium', 'Date', 'Dimensions', 'DateAcquired', 'Department', 'Classification', 'URL']
+
+    tb._max_width = {'Title': 20, 'Dimensions': 20, 'URL': 20}
+
+    for row in top_bot_artworks:
+        tb.add_row([row['id'], row['title'], row['medium'], row['date'], row['dimensions'], row['date_aquired'], row['department'], row['classification'], row['url']])
+
+    print(tb)
 
 def initCatalog():
     """
@@ -127,7 +164,7 @@ while True:
         print('Numero de artistas cargados: ' + str(lt.size(catalog['artists'])))
         print('Numero de obras cargadas: ' + str(lt.size(catalog['artworks']))+"\n")
 
-        print('Ultimos 3 artistas:\n' + str((catalog)))
+        print('Ultimos 3 artistas:\n' + str(lastArtist(catalog)))
         print('Ultimas 3 obras:\n' + str(lastArtwork(catalog)))
 
     elif int(inputs[0])==2:

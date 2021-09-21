@@ -20,6 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+from DISClib.Algorithms.Sorting.mergesort import sort
 from prettytable import PrettyTable
 from DISClib.DataStructures.arraylist import getElement
 import datetime as dt 
@@ -91,6 +92,9 @@ def lastArtwork(catalog):
     for i in lista:
         ultimos += str(i["title"]) + "\n"
     return ultimos
+
+def getArtist(catalog, artist_name):
+    return model.getArtist(catalog, artist_name)
         
 def cronologicalArtists(catalog, beginDate, endDate):
     catalogArtists= catalog["artists"]
@@ -140,8 +144,11 @@ def cronologicalArtwork(catalog, beginDate, endDate):
     return (foundArtwork, totalArtwork, purchased)
 
 def techniquesFromArtist(catalog, artist_name):
-    medium_dict, sorted_lengths = model.getTechniquesByArtist(catalog, artist_name)
-    return sorted_lengths, medium_dict[sorted_lengths[0]['medium']]
+    top_bot_artworks, sorted_list = model.getMediumsByArtist(catalog, artist_name)
+    total_artworks = 0
+    for value in lt.iterator(sorted_list):
+        total_artworks += value['len']
+    return top_bot_artworks, sorted_list, total_artworks
 
 
 # Funciones de ordenamiento

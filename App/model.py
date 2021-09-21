@@ -29,7 +29,7 @@ import config as cf
 from DISClib.ADT import list as lt
 import datetime as dt
 import time
-from DISClib.Algorithms.Sorting import insertionsort, shellsort, mergesort, quicksort
+from DISClib.Algorithms.Sorting import mergesort
 
 assert cf
 
@@ -87,6 +87,10 @@ depth, diameter, height, lenght, weight, width, seat_height, duration):
     "seat_height": seat_height,
     "duration": duration
     }
+
+    for key in artwork:
+        if artwork[key] == '':
+            artwork[key] = "Unknown"
     return artwork
 
 def addArtwork(catalog, artwork):
@@ -133,13 +137,19 @@ def lastArtist(catalog):
     for n in range(1, 4):
         authors.append(lt.getElement(catalog['artists'], size - n))
     return authors
-    
+
 def lastArtwork(catalog):
     artworks = []
     size = lt.size(catalog['artworks'])
     for n in range(1, 4):
         artworks.append(lt.getElement(catalog['artworks'], size - n))
     return artworks
+
+def getArtist(catalog, artist_name):
+    for artist in lt.iterator(catalog['artists']):
+        if artist['name'] == artist_name:
+            return artist
+    return None
 
 def getMediumsByArtist(catalog, artist_name):
     """
@@ -155,9 +165,8 @@ def getMediumsByArtist(catalog, artist_name):
             artist_id = artist['id']
             break
 
-    for artwork in lt.iterator(catalog['artworks']):
-        raw_ids = artwork['constituent_id']
-        ids = raw_ids[1:len(raw_ids)].replace(' ', '').split(',')
+    for artwork in lt.iterator(catalog['artworks']): 
+        ids = artwork['constituent_id'][1:-1].replace(' ', '').split(',')
         if artist_id in ids:
             if artwork['medium'] in medium_artworks:
                 medium_artworks[artwork['medium']].append(artwork)
@@ -168,11 +177,12 @@ def getMediumsByArtist(catalog, artist_name):
         lt.addLast(list_to_sort, {'medium': key, 'len': len(medium_artworks[key])})
 
     mergesort.sort(list_to_sort, cmpMediumsByArtworks)
+    top_medium_artworks = medium_artworks[lt.getElement(list_to_sort, 1)['medium']]
 
-    return medium_artworks, list_to_sort
+    return top_medium_artworks, list_to_sort
 
 def cmpMediumsByArtworks(technique1, technique2):
-    return technique1['len'] < technique2['len']
+    return technique1['len'] > technique2['len']
 
 def sortArtworks(catalog):
     return mergesort.sort(catalog,cmpArtworkByDateAcquired)
