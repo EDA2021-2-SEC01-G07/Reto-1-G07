@@ -49,6 +49,8 @@ se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
 
+catalog = None
+
 
 def printMenu():
     print("Bienvenido")
@@ -59,6 +61,51 @@ def printMenu():
     print("5- Clasificar las obras por la nacionalidad de sus creadores")
     print("0- Salir")
     #No olvidar el pdf de analisis
+
+def printArtistMediums():
+    global catalog
+    print("=============== Req No. 3 Inputs ===============")
+    artist_name = input("Examine the work of the artist named: ")
+    artist = controller.getArtist(catalog, artist_name)
+    top_artworks, medium_ranking = controller.techniquesFromArtist(catalog, artist)
+    artist_id = artist['id']
+
+    total_artworks = 0
+    for ranking in lt.iterator(medium_ranking):
+        total_artworks += ranking['len']
+
+    print(f'''\n=============== Req No. 3 Answer ===============\n
+{artist_name} with MoMA ID {artist_id} has {total_artworks} in his/her name at the museum\n
+There are {lt.size(medium_ranking)} different mediums/techniques in his/her work.\n
+Her/His top 5 Medium/Technique are:''')
+
+    tb = pt.PrettyTable()
+    tb.field_names = ['MediumName', 'Count']
+
+    done = 1
+    while done < 6:
+        element = lt.getElement(medium_ranking, done)
+        tb.add_row([element['medium'], element['len']])
+        done += 1
+    
+    tb.align['MediumName'] = 'l'
+    tb.align['Count'] = 'r'
+    
+    print(tb)
+
+    top_element = lt.getElement(medium_ranking, 1)
+    top_medium = top_element['medium']
+    top_length = top_element['len']
+    print(f'\nHis/Her most used Medium/Technique is: {top_medium} with {top_length}.')
+    print(f'A sample of {top_length} {top_medium} from the collection are:')
+
+    tb = pt.PrettyTable()
+    tb.field_names = ['ObjectID', 'Title', 'Medium', 'Date', 'Dimensions', 'DateAcquired', 'Department', 'Classification', 'URL']
+    tb._max_width = {'Title': 20, 'Dimensions': 20, 'URL': 20}
+
+    for row in lt.iterator(top_artworks):
+        tb.add_row([row['id'], row['title'], row['medium'], row['date'], row['dimensions'], row['date_aquired'], row['department'], row['classification'], row['url']])
+    print(tb)
 
 def initCatalog():
     """
@@ -106,8 +153,6 @@ def lastArtwork(catalog):
 #                   book['isbn'] + ' Rating: ' + book['average_rating'])
 #     else:
 #         print('No se encontraron libros')
-
-catalog = None
 
 """
 Menu principal
@@ -200,6 +245,24 @@ while True:
         table2._max_width={"ObjectID":17,"Title":17,"ArtistsNames":18,"Medium":18,"Date":17,"Dimensions":18,"Department":15,"Classification":17,"URL":22}
         print(table2)
         pass
+    elif int(inputs[0])==4:
+        printArtistMediums()
+
+    # elif int(inputs[0]) == 2:
+    #     number = input("Buscando los TOP ?: ")
+    #     books = controller.getBestBooks(catalog, int(number))
+    #     printBestBooks(books)
+
+    # elif int(inputs[0]) == 3:
+    #     authorname = input("Nombre del autor a buscar: ")
+    #     author = controller.getBooksByAuthor(catalog, authorname)
+    #     printAuthorData(author)
+
+    # elif int(inputs[0]) == 4:
+    #     label = input("Etiqueta a buscar: ")
+    #     book_count = controller.countBooksByTag(catalog, label)
+    #     print('Se encontraron: ', book_count, ' Libros')
+
     else:
         sys.exit(0)
 sys.exit(0)
