@@ -25,11 +25,13 @@
  """
 
 
+from DISClib.DataStructures.arraylist import newList
 import config as cf
 from DISClib.ADT import list as lt
 import datetime as dt
 import time
 from DISClib.Algorithms.Sorting import mergesort
+from typing import Tuple, Dict, Callable
 
 assert cf
 
@@ -37,6 +39,8 @@ assert cf
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
 los mismos.
 """
+
+ADTList = Dict[str, any]
 
 def newCatalog():
     catalog = {
@@ -59,6 +63,9 @@ def newArtist(id, name, biography, nationality, gender, begin_date, end_date, wi
     'wiki_id': wiki_id,
     'ulan': ulan
     }
+    for key in artist:
+        if artist[key] == "":
+            artist[key] = "Unknown"
     return artist
 
 def newArtwork(id, title, constituent_id, date, medium, dimensions, credit_line,
@@ -146,48 +153,84 @@ def lastArtwork(catalog):
     return artworks
 
 def getArtist(catalog, artist_name):
+    """
+    Retorna la informacion de un artista a partir de
+    su nombre, buscandolo linealmente en el catalogo.
+    Args:
+        catalog: Catalogo para buscar
+        artist_name: Nombre del artista
+    """
     for artist in lt.iterator(catalog['artists']):
         if artist['name'] == artist_name:
             return artist
     return None
 
-def getMediumsByArtist(catalog, artist_name):
+def getMediumsByArtist(catalog:dict, artist:dict)->Tuple[ADTList, ADTList]:
     """
-    Retorna un diccionario con todas las tecnicas de el artista
-    como llaves y sus respectivas obras como valores
-    """
-    medium_artworks = {}
-    artist_id = ""
-    list_to_sort = lt.newList(datastructure='ARRAY_LIST')
+    Retorna un ARRAY_LIST con valores teniendo dos llaves:
+    'medium' siendo el nombre de el medio
+    'len' siendo la cantidad de obras que pertenecen a este medio
 
-    for artist in lt.iterator(catalog['artists']):
-        if artist['name'] == artist_name:
-            artist_id = artist['id']
-            break
+    La lista esta ordenada de mayor a menor basado en la cantidad de obras.
+
+    Tambien retorna otra lista que contiene todas las obras de el medio
+    mas popular de el autor.
+    Args:
+        catalog: Catalogo para buscar
+        artist: Informacion del artista
+    """
+    artist_id = artist['id']
+    medium_to_artworks = {}
 
     for artwork in lt.iterator(catalog['artworks']): 
         ids = artwork['constituent_id'][1:-1].replace(' ', '').split(',')
         if artist_id in ids:
-            if artwork['medium'] in medium_artworks:
-                medium_artworks[artwork['medium']].append(artwork)
+            medium = artwork['medium']
+            if medium in medium_to_artworks:
+                lt.addLast(medium_to_artworks[medium], artwork)
             else:
-                medium_artworks[artwork['medium']] = [artwork]
+                new_list = lt.newList('ARRAY_LIST')
+                lt.addLast(new_list, artwork)
+                medium_to_artworks[medium] = new_list
 
-    for key in medium_artworks:
-        lt.addLast(list_to_sort, {'medium': key, 'len': len(medium_artworks[key])})
+    medium_ranking = dictToList(medium_to_artworks, 'medium', 'len', lt.size)
 
-    mergesort.sort(list_to_sort, cmpMediumsByArtworks)
-    top_medium_artworks = medium_artworks[lt.getElement(list_to_sort, 1)['medium']]
+    mergesort.sort(medium_ranking, cmpMediumByLength)
 
-    return top_medium_artworks, list_to_sort
+    top_artworks = medium_to_artworks[lt.getElement(medium_ranking, 1)['medium']]
 
-def cmpMediumsByArtworks(technique1, technique2):
-    return technique1['len'] > technique2['len']
+    return top_artworks, medium_ranking
+
+def dictToList(dictionary: dict, key_name: str, value_name: str, mod_func: Callable)->ADTList:
+    """
+    Devuelve una lista con valores igual a llaves de el diccionario de forma
+    key_name: llave, value_name: value
+    Esto permite que se organize el diccionario segun llave o segun valor
+    Args:
+        dictionary: diccionario a convertir
+        key_name: llave que se va a usar para acceder a el valor de la llave en los diccionarios.
+        value_name: llave que se va a usar para acceder al valo en los diccionarios.
+        mod_func: funcion para aplicar a el valor antes de guardarse.
+    """
+    l = lt.newList(datastructure='ARRAY_LIST')
+    for key in dictionary:
+        lt.addLast(l, {key_name: key, value_name: mod_func(dictionary[key])})
+    return l
+
+def cmpMediumByLength(medium1, medium2)->bool:
+    """
+    Devuelve verdadero (True) si el valor de la llave 'len' de medium1 es mayor que el de
+    medium2
+    Args:
+        medium1: informacion de el primer medio, siendo nombre y cantidad de obras
+        medium2: informacion de el segundo medio, siendo nombre y cantidad de obras
+    """
+    return medium1['len'] > medium2['len']
 
 def sortArtworks(catalog):
-    return mergesort.sort(catalog,cmpArtworkByDateAcquired)
+    mergesort.sort(catalog,cmpArtworkByDateAcquired)
 
-def cmpArtworkByDateAcquired(artwork1, artwork2): 
+def cmpArtworkByDateAcquired(artwork1, artwork2)->bool: 
     """ 
     Devuelve verdadero (True) si el 'DateAcquired' de artwork1 es menores que el de 
     artwork2 
@@ -198,9 +241,9 @@ def cmpArtworkByDateAcquired(artwork1, artwork2):
     return textToDate(artwork1["date_aquired"]) < textToDate(artwork2["date_aquired"])
 
 def sortArtist(catalog):
-    return mergesort.sort(catalog,cmpArtistByDate)
+    mergesort.sort(catalog,cmpArtistByDate)
 
-def cmpArtistByDate(artist1, artist2): 
+def cmpArtistByDate(artist1, artist2)->bool: 
     """ 
     Devuelve verdadero (True) si el 'DateAcquired' de artwork1 es menores que el de 
     artwork2 

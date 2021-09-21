@@ -143,12 +143,8 @@ def cronologicalArtwork(catalog, beginDate, endDate):
         index-=1   
     return (foundArtwork, totalArtwork, purchased)
 
-def techniquesFromArtist(catalog, artist_name):
-    top_bot_artworks, sorted_list = model.getMediumsByArtist(catalog, artist_name)
-    total_artworks = 0
-    for value in lt.iterator(sorted_list):
-        total_artworks += value['len']
-    return top_bot_artworks, sorted_list, total_artworks
+def techniquesFromArtist(catalog, artist):
+    return model.getMediumsByArtist(catalog, artist)
 
 
 # Funciones de ordenamiento
