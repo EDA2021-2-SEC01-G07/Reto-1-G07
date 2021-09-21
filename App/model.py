@@ -190,14 +190,10 @@ def cmpTotalNationalities(natio1,natio2):
 def sortByNationality(catalog):
     artists=catalog["artists"]
     artworks=catalog["artworks"]
-    nationality_list=lt.newList(datastructure="ARRAY_LIST")
-
-    #La llave es el ID del artista, el valor es otro diccionario con toda la informacion del artista.
     nationalities_dict={}
     list_of_nationalities=lt.newList(datastructure="ARRAY_LIST")
     artits_dict=creatArtistDict(artists)
 
-    
     for artwork in lt.iterator(artworks):
         code=artwork["constituent_id"] 
         code=code[1:len(code)-1].replace(" ","").split(",")
@@ -247,6 +243,9 @@ def sortByNationality(catalog):
     return sorted_nationalities, joined, top, artwork_count
 
 def creatArtistDict(artists):
+    """
+    Crea un diccionario donde la llave es el ID del artista y el valor es otro diccionario con toda la informacion del artista.
+    """
     artits_dict={}
     for artist in lt.iterator(artists):
         artist_id=artist["id"]
