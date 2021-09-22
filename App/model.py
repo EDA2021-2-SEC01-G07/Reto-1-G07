@@ -502,4 +502,4 @@ def getTransportationCost(artwork):
         cost = total * 72
     
 
-    return round(cost,6)
+    return cost

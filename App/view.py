@@ -205,12 +205,16 @@ def printcostFromDepartment():#Input 6
     total_cost=0
     for key in transportation[3]:
         total_cost+=transportation[3][key]
+    weight=0
+    for artwork in lt.iterator(transportation[1]):
+        if artwork["weight"]!="Unknown":
+            weight+=float(artwork["weight"])
     print("="*15 + " Req No. 5 Inputs " + "="*15)
     print("Estimate the cost to transport all artifacts in ",department," MoMA's Department")
     print("="*15 + " Req No. 5 Answers " + "="*15)
     print("The MoMA is going to transport ",lt.size(transportation[0])," artifacts from the ",department)
     print("REMEMBER!, NOT all MoMA's data is complete!!!...These are ESTIMATES!!!!")
-    print("Estimated cargo weight (kg): ")
+    print("Estimated cargo weight (kg): " ,round(weight,3))
     print("Estimated cargo cost (USD): ", round(total_cost,3))
     print("The TOP 5 most expensive items to transport are:")
     tb = pt.PrettyTable()
@@ -230,7 +234,7 @@ def printcostFromDepartment():#Input 6
             names.append(artist["name"])
         names=str(names)
         tb.add_row([code,artwork["title"],names[1:len(names)-1].replace("'",""),artwork["medium"],artwork["date"],artwork["dimensions"],
-        artwork["classification"],i["cost"],artwork["url"]])
+        artwork["classification"],round(i["cost"],4),artwork["url"]])
         contador+=1
     tb._max_width ={'ObjectID':17, 'Title':17,"ArtistsNames":17, 'Medium':17, 'Date':17, 'Dimensions':17,
      'Classifications':17, 'TransCost (USD)':17, 'URL':17}
@@ -249,7 +253,7 @@ def printcostFromDepartment():#Input 6
         names=str(i["Names"])
         names=names[1:len(names)-1].replace("'","")
         tb2.add_row([id,i["title"],names,i["medium"],i["date"],i["dimensions"],
-        i["classification"],cost,i["url"]])
+        i["classification"],round(cost,4),i["url"]])
         contador+=1
     tb2._max_width ={'ObjectID':17, 'Title':17,"ArtistsNames":17, 'Medium':17, 'Date':17, 'Dimensions':17,
      'Classifications':17, 'TransCost (USD)':17, 'URL':17}
