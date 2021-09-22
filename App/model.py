@@ -472,9 +472,9 @@ def getTransportationCost(artwork):
         dimensions += 1
     
     if artwork['circumference'] != "0" and artwork['circumference']!="Unknown":
-        radius = (artwork['circumference']/2*pi)
+        radius = float(artwork['circumference'])/2*pi
     elif artwork['diameter'] != "0" and artwork['diameter']!="Unknown":
-        radius = artwork['diameter']/2
+        radius = float(artwork['diameter'])/2
     
     if radius != 0:
         dimensions += 2
@@ -494,10 +494,10 @@ def getTransportationCost(artwork):
                 total/=100
     
     if weight != "0" and weight!="Unknown":
-        if total!=0 and total > weight:
+        if total!=0 and total > float(weight):
             cost = total * 72
         else:
-            cost = weight *72
+            cost = float(weight) *72
     elif total!=0:
         cost = total * 72
     
