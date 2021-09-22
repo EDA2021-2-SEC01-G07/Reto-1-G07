@@ -103,3 +103,9 @@ def costFromDepartment(catalog,department):
 
 def getArtworkDict(catalog):
     return model.createArtworkDict(catalog)
+
+def getArtistDict(artists):
+    return model.createArtistDict(artists)
+
+def addArtworkArtists(artworks, artists_dict):
+    return model.addArtworkArtists(artworks, artists_dict)

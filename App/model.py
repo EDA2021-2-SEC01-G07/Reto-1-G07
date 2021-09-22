@@ -170,7 +170,7 @@ def cronologicalArtwork(catalog, beginDate, endDate):
         date=textToDate(artwork["date_aquired"])
         if date>=beginDate and date<=endDate:
             lt.addLast(foundArtwork, artwork)
-            if artwork["credit_line"].lower().startswith("purchase"):
+            if "purchase" in artwork["credit_line"].lower():
                 purchased+=1
             totalArtwork+=1
     index=lt.size(catalogArtwork)
@@ -327,13 +327,13 @@ def sortByNationality(catalog):
     artworks=catalog["artworks"]
     nationalities_dict={}
     list_of_nationalities=lt.newList(datastructure="ARRAY_LIST")
-    artits_dict=createArtistDict(artists)
+    artists_dict=createArtistDict(artists)
 
     for artwork in lt.iterator(artworks):
         code=artwork["constituent_id"] 
         code=code[1:-1].replace(" ","").split(",")
         for artist_id in code:
-            nationality=artits_dict[artist_id]["nationality"]
+            nationality=artists_dict[artist_id]["nationality"]
             if nationality=="" or nationality =="Nationality unknown":
                 nationality="Unknown"
             if nationality in nationalities_dict:
@@ -364,29 +364,35 @@ def sortByNationality(catalog):
         lt.addLast(joined,i)
     for n in lt.iterator(last):
         lt.addLast(joined,n)
-    
-    for artwork in lt.iterator(joined):
-        names=[]
-        if artwork["url"]=="":
-            artwork["url"]="Unknown"
-        code=artwork["constituent_id"]
-        code=code[1:-1].replace(" ","").split(",")
-        for artist_id in code:
-            names.append(artits_dict[artist_id]["name"])
-        artwork["Names"]=names
-    
+
+    addArtworkArtists(joined,artists_dict)
+
     return sorted_nationalities, joined, top, artwork_count
 
 def createArtistDict(artists):
     """
     Crea un diccionario donde la llave es el ID del artista y el valor es otro diccionario con toda la informacion del artista.
     """
-    artits_dict={}
+    artists_dict={}
     for artist in lt.iterator(artists):
         artist_id=artist["id"]
-        artits_dict[artist_id]=artist
-    return artits_dict
+        artists_dict[artist_id]=artist
+    return artists_dict
 
+def addArtworkArtists(artworks,artists_dict):
+    """
+    Añade al array artworks los nombres de los artistas para cada obra
+    """
+    for artwork in lt.iterator(artworks):
+        names=[]
+        if artwork["url"]=="":
+            artwork["url"]="Unknown"
+        code=artwork["constituent_id"]
+        code=code[1:-1].replace(" ","").split(",")
+        for artist_id in code:
+            names.append(artists_dict[artist_id]["name"])
+        artwork["Names"]=names
+    
 def createArtworkDict(artworks):
     """
     Crea un diccionario donde la llave es el ID de la obra y el valor es otro diccionario con toda la informacion de la obra.

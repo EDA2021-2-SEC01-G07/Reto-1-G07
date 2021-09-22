@@ -46,7 +46,7 @@ def printMenu():
     print("6- Transport artworks by deparment")
     print("0- Exit")
 
-def printLoadCatalog():
+def printLoadCatalog():#Input 1
     global catalog
     print("Cargando información de los archivos ....")
     catalog = initCatalog()
@@ -57,7 +57,7 @@ def printLoadCatalog():
     print('Ultimos 3 artistas:\n' + str(lastArtist(catalog)))
     print('Ultimas 3 obras:\n' + str(lastArtwork(catalog)))
 
-def printCronologicallyArtists():
+def printCronologicallyArtists():#Input 2
     global catalog
     first=int(input("Año inicial: "))
     last=int(input("Año final: "))
@@ -74,7 +74,7 @@ def printCronologicallyArtists():
         table.add_row([line["id"],line["name"],line["begin_date"],line["nationality"],line["gender"],line["biography"],line["wiki_id"],line["ulan"]])
     print(table)
 
-def printCronologicallyArtworks():
+def printCronologicallyArtworks():#Input 3
     global catalog
     firstY=int(input("Año incial: "))
     firstM=int(input("Mes incial: "))
@@ -94,17 +94,20 @@ def printCronologicallyArtworks():
     print(f'The MoMA acquired {totalArtwork} unique pieces between {firstY}-{firstM}-{firstD} and {lastY}-{lastM}-{lastD}')
     print(f'With {lt.size(foundArtwork)} different artists and purchased {purchased} of them')
     print("The first and last 3 artists in the range are...")
-    
+    artist_dict=controller.getArtistDict(catalog["artists"])
+    controller.addArtworkArtists(foundArtwork,artist_dict)
     table= pt.PrettyTable()
     table.field_names=["ObjectID","Title","ArtistsNames","Medium","Dimensions","Date","DateAquired","URL"]
     table.max_width=40
     for n in range(1,7):
         line=lt.getElement(foundArtwork, n)
-        table.add_row([line["id"],line["title"],"None",line["medium"],line["dimensions"],line["date"],line["date_aquired"],line["url"]])
+        names=str(line["Names"])
+        names=names[1:len(names)-1].replace("'","")
+        table.add_row([line["id"],line["title"],names,line["medium"],line["dimensions"],line["date"],line["date_aquired"],line["url"]])
     table._max_width={"ObjectID":17,"Title":17,"ArtistsNames":17,"Medium":21,"Dimensions":21,"Date":17,"DateAquired":17,"URL":21}
     print(table)
 
-def printArtistMediums():
+def printArtistMediums():#Input 4
     global catalog
     print("="*15 + " Req No. 3 Inputs " + "="*15)
     artist_name = input("Examine the work of the artist named: ")
@@ -151,7 +154,7 @@ Her/His top 5 Medium/Technique are:''')
          row['date_aquired'], row['department'], row['classification'], row['url']])
     print(tb)
 
-def printArtworkNationality():
+def printArtworkNationality():#Input 5
     global catalog
     nationalities=controller.sortByNationality(catalog)
     print("="*15+ "Req No. 4 Inputs"+ "="*15)
@@ -173,19 +176,20 @@ def printArtworkNationality():
     table2.field_names=["ObjectID","Title","ArtistsNames","Medium","Date","Dimensions","Department","Classification","URL"]
     
     for n in lt.iterator(nationalities[1]):
-        nombres=str(n["Names"])
-        nombres=nombres[1:len(nombres)-1].replace("'","")
-        table2.add_row([n["id"],n["title"],nombres,n["medium"],n["date"],n["dimensions"],n["department"],n["classification"],n["url"]])
+        names=str(n["Names"])
+        names=names[1:len(names)-1].replace("'","")
+        table2.add_row([n["id"],n["title"],names,n["medium"],n["date"],n["dimensions"],n["department"],n["classification"],n["url"]])
     table2.align="l"
     table2._max_width={"ObjectID":17,"Title":17,"ArtistsNames":18,"Medium":18,"Date":17,"Dimensions":18,"Department":15,"Classification":17,"URL":22}
     table2.hrules = pt.ALL
     print(table2)
 
-def printcostFromDepartment():
+def printcostFromDepartment():#Input 6
     global catalog
     department= input("Search for department named: ")
     transportation=controller.costFromDepartment(catalog,department)
     artwork_dict=controller.getArtworkDict(catalog["artworks"])
+    artist_dict=controller.getArtistDict(catalog["artists"])
     total_cost=0
     for key in transportation[3]:
         total_cost+=transportation[3][key]
@@ -201,12 +205,19 @@ def printcostFromDepartment():
     tb.field_names = ['ObjectID', 'Title',"ArtistsNames", 'Medium', 'Date', 'Dimensions',
      'Classifications', 'TransCost (USD)', 'URL']
     contador=0
+    controller.addArtworkArtists(transportation[1],artist_dict)
     for i in lt.iterator(transportation[0]):
         if contador >4:
             break
         code=i["artwork"]
         artwork=artwork_dict[code]
-        tb.add_row([code,artwork["title"],None,artwork["medium"],artwork["date"],artwork["dimensions"],
+        artists_ids=artwork['constituent_id'][1:-1].replace(' ', '').split(',')
+        names=[]
+        for artist in transportation[2][code]:
+            names.append(artist["name"])
+            print("a",names, type(names))
+        names=str(names)
+        tb.add_row([code,artwork["title"],names[1:len(names)-1].replace("'",""),artwork["medium"],artwork["date"],artwork["dimensions"],
         artwork["classification"],i["cost"],artwork["url"]])
         contador+=1
     tb._max_width ={'ObjectID':17, 'Title':17,"ArtistsNames":17, 'Medium':17, 'Date':17, 'Dimensions':17,
@@ -223,7 +234,9 @@ def printcostFromDepartment():
             break
         id=i["id"]
         cost=transportation[3][id]
-        tb2.add_row([id,i["title"],None,i["medium"],i["date"],i["dimensions"],
+        names=str(i["Names"])
+        names=names[1:len(names)-1].replace("'","")
+        tb2.add_row([id,i["title"],names,i["medium"],i["date"],i["dimensions"],
         i["classification"],cost,i["url"]])
         contador+=1
     tb2._max_width ={'ObjectID':17, 'Title':17,"ArtistsNames":17, 'Medium':17, 'Date':17, 'Dimensions':17,
