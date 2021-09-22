@@ -289,6 +289,20 @@ def cmpArtworkByDateAcquired(artwork1, artwork2)->bool:
     """
     return textToDate(artwork1["date_aquired"]) < textToDate(artwork2["date_aquired"])
 
+def cmpArtworkByDateAcquiredReversed(artwork1, artwork2)->bool: 
+    """ 
+    Devuelve verdadero (True) si el 'DateAcquired' de artwork1 es menores que el de 
+    artwork2 
+    Args: 
+        artwork1: informacion de la primera obra que incluye su valor 'DateAcquired' 
+        artwork2: informacion de la segunda obra que incluye su valor 'DateAcquired' 
+    """
+    if artwork1["date"]=="Unknown":
+        return artwork2["date"]
+    if artwork2["date"]=="Unknown":
+        return artwork1["date"]
+    return int(artwork1["date"]) < int(artwork2["date"])
+
 def cmpArtistByDate(artist1, artist2)->bool: 
     """ 
     Devuelve verdadero (True) si el 'DateAcquired' de artwork1 es menores que el de 
@@ -373,6 +387,16 @@ def createArtistDict(artists):
         artits_dict[artist_id]=artist
     return artits_dict
 
+def createArtworkDict(artworks):
+    """
+    Crea un diccionario donde la llave es el ID de la obra y el valor es otro diccionario con toda la informacion de la obra.
+    """
+    artwork_dict={}
+    for artwork in lt.iterator(artworks):
+        artwork_id=artwork["id"]
+        artwork_dict[artwork_id]=artwork
+    return artwork_dict
+
 def costFromDepartment(catalog, department):
 
     artwork_id_to_cost = {}
@@ -390,15 +414,15 @@ def costFromDepartment(catalog, department):
         author_ids = stringArrayToArray(artwork['constituent_id'])
         for id in author_ids:
             authors.append(id_to_artist[id])
-        artwork_id_to_authors[artwork[id]] = authors
-        artwork_id_to_cost[artwork[id]] = getTransportationCost(artwork)
+        artwork_id_to_authors[artwork["id"]] = authors
+        artwork_id_to_cost[artwork["id"]] = getTransportationCost(artwork)
     
     organized_cost_list = dictToList(artwork_id_to_cost, 'artwork', 'cost', lambda x: x)
 
     mergesort.sort(organized_cost_list, cmpCost)
-    mergesort.sort(artworks_department, cmpArtworkByDateAcquired)
+    mergesort.sort(artworks_department, cmpArtworkByDateAcquiredReversed)
 
-    return organized_cost_list, artworks_department, artwork_id_to_authors
+    return organized_cost_list, artworks_department, artwork_id_to_authors, artwork_id_to_cost
 
 def cmpCost(value1, value2):
     return value1['cost'] > value2['cost']
@@ -407,7 +431,7 @@ def stringArrayToArray(string):
     return string[1:-1].replace(' ', '').split(',')
 
 def getTransportationCost(artwork):
-    value = 42
+    cost = 42
     artworks = ['width', 'height', 'lenght', 'depth']
     weight = artwork['weight']
     width = 0
@@ -421,46 +445,55 @@ def getTransportationCost(artwork):
 
     for unit in artworks:
         value = artwork[unit]
-        if value != "0" and bool(value):
+        if value != "0" and value !="Unknown":
             unit1 = unit
             width = float(value)
     if width != 0:
         dimensions += 1
     for unit in artworks:
         value = artwork[unit]
-        if value != "0" and bool(value) and unit != unit1:
+        if value != "0" and value !="Unknown" and unit != unit1:
             unit2 = unit
             height = float(value)
     if height != 0:
         dimensions += 1
     for unit in artworks:
         value = artwork[unit]
-        if value != "0" and bool(value) and unit not in (unit1, unit2):
+        if value != "0" and value !="Unknown" and unit not in (unit1, unit2):
             lenght = float(value)
             break
     if lenght != 0:
         dimensions += 1
     
-    if artwork['circumference'] != "0" and bool(artwork['circumference']):
+    if artwork['circumference'] != "0" and artwork['circumference']!="Unknown":
         radius = (artwork['circumference']/2*pi)
-    elif artwork['diameter'] != "0" and bool(artwork['diameter']):
+    elif artwork['diameter'] != "0" and artwork['diameter']!="Unknown":
         radius = artwork['diameter']/2
     
     if radius != 0:
         dimensions += 2
     
-    if dimensions > 1 and dimensions < 4:
+    if dimensions == 2 or dimensions ==3:
         if bool(radius):
             total = pi * radius**2
+            total/=10000
             if width != 0:
                 total *= width
+                total/=100
         else:
             total = width * height
+            total/=10000
             if lenght != 0:
                 total *= lenght
+                total/=100
     
-    if weight != "0" and bool(weight):
-        value = weight * 72
-        if total != 0 and total > weight:
-            value = total * 72
-    return value
+    if weight != "0" and weight!="Unknown":
+        if total!=0 and total > weight:
+            cost = total * 72
+        else:
+            cost = weight *72
+    elif total!=0:
+        cost = total * 72
+    
+
+    return round(cost,6)

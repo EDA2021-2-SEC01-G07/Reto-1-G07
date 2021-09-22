@@ -20,6 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+from App.model import createArtworkDict
 import config as cf
 import model
 import csv
@@ -47,7 +48,7 @@ def loadArtist(catalog):
     """
     Carga la información que asocia tags con libros.
     """
-    artistfiles = cf.data_dir + 'Artists-utf8-80pct.csv'
+    artistfiles = cf.data_dir + 'Artists-utf8-small.csv'
     input_file = csv.DictReader(open(artistfiles, encoding='utf-8'))
     for authors in input_file:
         model.addArtist(catalog, authors)
@@ -57,7 +58,7 @@ def loadArtWork(catalog):
     """
     Carga la información que asocia tags con libros.
     """
-    artfiles = cf.data_dir + 'Artworks-utf8-80pct.csv'
+    artfiles = cf.data_dir + 'Artworks-utf8-small.csv'
     input_file = csv.DictReader(open(artfiles, encoding='utf-8'))
     for artwork in input_file:
         model.addArtwork(catalog, artwork)
@@ -97,5 +98,8 @@ def sortByNationality(catalog):
 def techniquesFromArtist(catalog, artist):
     return model.getMediumsByArtist(catalog, artist)
 
-def costFromDepartment(catalog):
-    return model.costFromDepartment(catalog)
+def costFromDepartment(catalog,department):
+    return model.costFromDepartment(catalog, department)
+
+def getArtworkDict(catalog):
+    return model.createArtworkDict(catalog)

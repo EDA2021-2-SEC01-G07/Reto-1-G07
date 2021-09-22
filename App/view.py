@@ -43,6 +43,7 @@ def printMenu():
     print("3- List cronologically the adquisitions")
     print("4- Classify the artworks of an artist by technique/medium")
     print("5- Classify the artworks by the nationality of their creators")
+    print("6- Transport artworks by deparment")
     print("0- Exit")
 
 def printLoadCatalog():
@@ -182,8 +183,53 @@ def printArtworkNationality():
 
 def printcostFromDepartment():
     global catalog
-    transportation=controller.costFromDepartment(catalog)
-    pass
+    department= input("Search for department named: ")
+    transportation=controller.costFromDepartment(catalog,department)
+    artwork_dict=controller.getArtworkDict(catalog["artworks"])
+    total_cost=0
+    for key in transportation[3]:
+        total_cost+=transportation[3][key]
+    print("="*15 + " Req No. 5 Inputs " + "="*15)
+    print("Estimate the cost to transport all artifacts in ",department," MoMA's Department")
+    print("="*15 + " Req No. 5 Answers " + "="*15)
+    print("The MoMA is going to transport ",lt.size(transportation[0])," artifacts from the ",department)
+    print("REMEMBER!, NOT all MoMA's data is complete!!!...These are ESTIMATES!!!!")
+    print("Estimated cargo weight (kg): ")
+    print("Estimated cargo cost (USD): ", round(total_cost,3))
+    print("The TOP 5 most expensive items to transport are:")
+    tb = pt.PrettyTable()
+    tb.field_names = ['ObjectID', 'Title',"ArtistsNames", 'Medium', 'Date', 'Dimensions',
+     'Classifications', 'TransCost (USD)', 'URL']
+    contador=0
+    for i in lt.iterator(transportation[0]):
+        if contador >4:
+            break
+        code=i["artwork"]
+        artwork=artwork_dict[code]
+        tb.add_row([code,artwork["title"],None,artwork["medium"],artwork["date"],artwork["dimensions"],
+        artwork["classification"],i["cost"],artwork["url"]])
+        contador+=1
+    tb._max_width ={'ObjectID':17, 'Title':17,"ArtistsNames":17, 'Medium':17, 'Date':17, 'Dimensions':17,
+     'Classifications':17, 'TransCost (USD)':17, 'URL':17}
+    print(tb)
+
+    print("The TOP 5 oldest items to transport are: ")
+    tb2 = pt.PrettyTable()
+    tb2.field_names = ['ObjectID', 'Title',"ArtistsNames", 'Medium', 'Date', 'Dimensions',
+     'Classifications', 'TransCost (USD)', 'URL']
+    contador=0
+    for i in lt.iterator(transportation[1]):
+        if contador >4:
+            break
+        id=i["id"]
+        cost=transportation[3][id]
+        tb2.add_row([id,i["title"],None,i["medium"],i["date"],i["dimensions"],
+        i["classification"],cost,i["url"]])
+        contador+=1
+    tb2._max_width ={'ObjectID':17, 'Title':17,"ArtistsNames":17, 'Medium':17, 'Date':17, 'Dimensions':17,
+     'Classifications':17, 'TransCost (USD)':17, 'URL':17}
+    print(tb2)
+    
 def initCatalog():
     """
     Inicializa el catalogo de libros
