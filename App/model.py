@@ -24,11 +24,13 @@
  * Dario Correal - Version inicial
  """
 
+from DISClib.DataStructures.arraylist import newList
 import config as cf
 from DISClib.ADT import list as lt
 import datetime as dt
 from DISClib.Algorithms.Sorting import mergesort
 from typing import Tuple, Dict, Callable
+from math import pi
 
 assert cf
 
@@ -315,7 +317,7 @@ def sortByNationality(catalog):
 
     for artwork in lt.iterator(artworks):
         code=artwork["constituent_id"] 
-        code=code[1:len(code)-1].replace(" ","").split(",")
+        code=code[1:-1].replace(" ","").split(",")
         for artist_id in code:
             nationality=artits_dict[artist_id]["nationality"]
             if nationality=="" or nationality =="Nationality unknown":
@@ -354,7 +356,7 @@ def sortByNationality(catalog):
         if artwork["url"]=="":
             artwork["url"]="Unknown"
         code=artwork["constituent_id"]
-        code=code[1:len(code)-1].replace(" ","").split(",")
+        code=code[1:-1].replace(" ","").split(",")
         for artist_id in code:
             names.append(artits_dict[artist_id]["name"])
         artwork["Names"]=names
@@ -370,3 +372,95 @@ def createArtistDict(artists):
         artist_id=artist["id"]
         artits_dict[artist_id]=artist
     return artits_dict
+
+def costFromDepartment(catalog, department):
+
+    artwork_id_to_cost = {}
+    artwork_id_to_authors = {}
+    id_to_artist = createArtistDict(catalog['artists'])
+    
+    artworks_department = lt.newList('ARRAY_LIST')
+
+    for artwork in lt.iterator(catalog['artworks']):
+        if department == artwork['department']:
+            lt.addLast(artworks_department, artwork)
+
+    for artwork in lt.iterator(artworks_department):
+        authors = []
+        author_ids = stringArrayToArray(artwork['constituent_id'])
+        for id in author_ids:
+            authors.append(id_to_artist[id])
+        artwork_id_to_authors[artwork[id]] = authors
+        artwork_id_to_cost[artwork[id]] = getTransportationCost(artwork)
+    
+    organized_cost_list = dictToList(artwork_id_to_cost, 'artwork', 'cost', lambda x: x)
+
+    mergesort.sort(organized_cost_list, cmpCost)
+    mergesort.sort(artworks_department, cmpArtworkByDateAcquired)
+
+    return organized_cost_list, artworks_department, artwork_id_to_authors
+
+def cmpCost(value1, value2):
+    return value1['cost'] > value2['cost']
+
+def stringArrayToArray(string):
+    return string[1:-1].replace(' ', '').split(',')
+
+def getTransportationCost(artwork):
+    value = 42
+    artworks = ['width', 'height', 'lenght', 'depth']
+    weight = artwork['weight']
+    width = 0
+    height = 0
+    lenght = 0
+    radius = 0
+    dimensions = 0
+    total = 0
+    unit1 = ""
+    unit2 = ""
+
+    for unit in artworks:
+        value = artwork[unit]
+        if value != "0" and bool(value):
+            unit1 = unit
+            width = float(value)
+    if width != 0:
+        dimensions += 1
+    for unit in artworks:
+        value = artwork[unit]
+        if value != "0" and bool(value) and unit != unit1:
+            unit2 = unit
+            height = float(value)
+    if height != 0:
+        dimensions += 1
+    for unit in artworks:
+        value = artwork[unit]
+        if value != "0" and bool(value) and unit not in (unit1, unit2):
+            lenght = float(value)
+            break
+    if lenght != 0:
+        dimensions += 1
+    
+    if artwork['circumference'] != "0" and bool(artwork['circumference']):
+        radius = (artwork['circumference']/2*pi)
+    elif artwork['diameter'] != "0" and bool(artwork['diameter']):
+        radius = artwork['diameter']/2
+    
+    if radius != 0:
+        dimensions += 2
+    
+    if dimensions > 1 and dimensions < 4:
+        if bool(radius):
+            total = pi * radius**2
+            if width != 0:
+                total *= width
+        else:
+            total = width * height
+            if lenght != 0:
+                total *= lenght
+    
+    if weight != "0" and bool(weight):
+        value = weight * 72
+        if total != 0 and total > weight:
+            value = total * 72
+    return value
