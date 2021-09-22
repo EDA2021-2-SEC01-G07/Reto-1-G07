@@ -60,7 +60,6 @@ def printCronologicallyArtists():
     global catalog
     first=int(input("Año inicial: "))
     last=int(input("Año final: "))
-    
     print("="*15+ "Req No. 1 Inputs"+ "="*15)
     print("Artist born between "+ str(first)+" and " +str(last))
     print("="*15, "Req No. 1 Answers", "="*15)
@@ -90,18 +89,18 @@ def printCronologicallyArtworks():
     print("Artwork aquired between "+ str(first)+" and " +str(last))
     print("="*15, "Req No. 2 Answers", "="*15)
     
-    cronologicalArtwork=controller.cronologicalArtwork(catalog, first, last)
-    print("Total of unique pieces aquired: ", cronologicalArtwork[1])
-    print("Total of artwork purchased: ", cronologicalArtwork[2])
+    foundArtwork, totalArtwork, purchased = controller.cronologicalArtwork(catalog, first, last)
+    print(f'The MoMA acquired {totalArtwork} unique pieces between {firstY}-{firstM}-{firstD} and {lastY}-{lastM}-{lastD}')
+    print(f'With {lt.size(foundArtwork)} different artists and purchased {purchased} of them')
+    print("The first and last 3 artists in the range are...")
     
     table= pt.PrettyTable()
     table.field_names=["ObjectID","Title","ArtistsNames","Medium","Dimensions","Date","DateAquired","URL"]
-    # table.max_width=40
-    # for n in range(1,4):
-    # line=lt.getElement(cronologicalArtwork[0],2)
-    # table.add_row([line["id"],line["title"],"None",line["medium"],line["dimensions"],line["date"],line["date_aquired"],line["url"]])
-    # print(table)
-    print(lt.size(cronologicalArtwork[0]))
+    table.max_width=40
+    for n in range(1,7):
+        line=lt.getElement(foundArtwork, n)
+        table.add_row([line["id"],line["title"],"None",line["medium"],line["dimensions"],line["date"],line["date_aquired"],line["url"]])
+    print(table)
 
 def printArtistMediums():
     global catalog

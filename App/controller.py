@@ -23,13 +23,10 @@
 import config as cf
 import model
 import csv
-from DISClib.ADT import list as lt
 
 """
 El controlador se encarga de mediar entre la vista y el modelo.
 """
-
-# Inicialización del Catálogo de libros
 
 def initCatalog():
     """
@@ -37,10 +34,6 @@ def initCatalog():
     """
     catalog = model.newCatalog()
     return catalog
-
-
-# Funciones para la carga de datos
-
 
 def loadData(catalog):
     """
@@ -93,51 +86,10 @@ def getArtist(catalog, artist_name):
     return model.getArtist(catalog, artist_name)
         
 def cronologicalArtists(catalog, beginDate, endDate):
-    catalogArtists= catalog["artists"]
-    sortedArtists=model.sortArtist(catalogArtists)
-    foundArtists=lt.newList(datastructure='ARRAY_LIST')
-    firstAndLast=lt.newList(datastructure='ARRAY_LIST')
-  
-    for artist in lt.iterator(sortedArtists):
-        if artist["begin_date"]>=beginDate and artist["begin_date"]<=endDate:
-            if lt.size(firstAndLast)<3:
-                lt.addLast(firstAndLast,artist)
-            lt.addLast(foundArtists,artist)     
-    for n in range(2,-1,-1):
-        posicion=lt.size(foundArtists)-n
-        elemento=lt.getElement(foundArtists,posicion)
-        lt.addLast(firstAndLast,elemento)
-    
-    return firstAndLast,lt.size(foundArtists)
-
+    return model.cronologicalArtists(catalog, beginDate, endDate)
 
 def cronologicalArtwork(catalog, beginDate, endDate):
-    catalogArtwork=catalog["artworks"]
-    sortedArtworks=model.sortArtworks(catalogArtwork)
-    totalArtwork=0
-    foundArtwork=lt.newList()
-    purchased=0
-
-
-    for position in range(1, lt.size(sortedArtworks)):
-        artwork=lt.getElement(sortedArtworks, position)
-        if artwork["date_aquired"]=="":
-            continue
-        date=model.textToDate(artwork["date_aquired"])
-        if date>=beginDate and date<=endDate:
-            lt.addLast(foundArtwork, artwork)
-            if artwork["credit_line"].lower().startswith("purchase"):
-                purchased+=1
-            totalArtwork+=1    
-    index=lt.size(sortedArtworks)
-    while index!=0 and lt.size(foundArtwork)<6:
-        date=model.textToDate(artwork["date_aquired"])
-        artwork=lt.getElement(sortedArtworks, index)
-        if date>=beginDate and date<=endDate:
-            lt.addLast(foundArtwork,artwork)
-        
-        index-=1   
-    return (foundArtwork, totalArtwork, purchased)
+    return model.cronologicalArtwork(catalog, beginDate, endDate)
 
 def sortByNationality(catalog):
     return model.sortByNationality(catalog)

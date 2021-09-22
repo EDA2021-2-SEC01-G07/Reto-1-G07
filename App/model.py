@@ -136,6 +136,58 @@ def addArtist(catalog, artist):
 
     lt.addLast(catalog['artists'], a)
 
+def cronologicalArtists(catalog, beginDate, endDate):
+    catalogArtists= dict(catalog["artists"])
+    mergesort.sort(catalogArtists, cmpArtistByDate)
+    foundArtists=lt.newList(datastructure='ARRAY_LIST')
+    firstAndLast=lt.newList(datastructure='ARRAY_LIST')
+  
+    for artist in lt.iterator(catalogArtists):
+        if artist["begin_date"]>=beginDate and artist["begin_date"]<=endDate:
+            if lt.size(firstAndLast)<3:
+                lt.addLast(firstAndLast,artist)
+            lt.addLast(foundArtists,artist)     
+    for n in range(2,-1,-1):
+        posicion=lt.size(foundArtists)-n
+        elemento=lt.getElement(foundArtists,posicion)
+        lt.addLast(firstAndLast,elemento)
+    
+    return firstAndLast, lt.size(foundArtists)
+
+
+def cronologicalArtwork(catalog, beginDate, endDate):
+    catalogArtwork=dict(catalog["artworks"])
+    mergesort.sort(catalogArtwork, cmpArtworkByDateAcquired)
+    totalArtwork=0
+    foundArtwork=lt.newList('ARRAY_LIST')
+    purchased=0
+
+    for artwork in lt.iterator(catalogArtwork):
+        if artwork["date_aquired"]=="Unknown":
+            continue
+        date=textToDate(artwork["date_aquired"])
+        if date>=beginDate and date<=endDate:
+            lt.addLast(foundArtwork, artwork)
+            if artwork["credit_line"].lower().startswith("purchase"):
+                purchased+=1
+            totalArtwork+=1
+    index=lt.size(catalogArtwork)
+    while index!=0 and lt.size(foundArtwork)<6:
+        date=textToDate(artwork["date_aquired"])
+        artwork=lt.getElement(catalogArtwork, index)
+        if date>=beginDate and date<=endDate:
+            lt.addLast(foundArtwork,artwork)
+        index-=1   
+    return foundArtwork, totalArtwork, purchased
+
+def textToDate(text):
+    if text!="Unknown":
+        date=text.split("-")
+        date=dt.date(int(date[0]),int(date[1]),int(date[2]))
+        return date
+    else:
+        return dt.date(1,1,1)
+
 def lastArtist(catalog):
     authors = []
     size = lt.size(catalog['artists'])
@@ -225,9 +277,6 @@ def cmpMediumByLength(medium1, medium2)->bool:
     """
     return medium1['len'] > medium2['len']
 
-def sortArtworks(catalog):
-    mergesort.sort(catalog,cmpArtworkByDateAcquired)
-
 def cmpArtworkByDateAcquired(artwork1, artwork2)->bool: 
     """ 
     Devuelve verdadero (True) si el 'DateAcquired' de artwork1 es menores que el de 
@@ -238,9 +287,6 @@ def cmpArtworkByDateAcquired(artwork1, artwork2)->bool:
     """
     return textToDate(artwork1["date_aquired"]) < textToDate(artwork2["date_aquired"])
 
-def sortArtist(catalog):
-    mergesort.sort(catalog,cmpArtistByDate)
-
 def cmpArtistByDate(artist1, artist2)->bool: 
     """ 
     Devuelve verdadero (True) si el 'DateAcquired' de artwork1 es menores que el de 
@@ -250,15 +296,6 @@ def cmpArtistByDate(artist1, artist2)->bool:
         artwork2: informacion de la segunda obra que incluye su valor 'DateAcquired' 
     """
     return artist1["begin_date"] < artist2["begin_date"]
-
-
-def textToDate(text):
-    if text!="":
-        date=text.split("-")
-        date=dt.date(int(date[0]),int(date[1]),int(date[2]))
-        return date
-    else:
-        return dt.date(1,1,1)
 
 def cmpArtworkByNationality(artist1, artist2): 
     return artist1["nationality"] < artist2["nationality"] #Menor a mayor
