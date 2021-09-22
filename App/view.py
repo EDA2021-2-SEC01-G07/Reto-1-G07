@@ -211,11 +211,9 @@ def printcostFromDepartment():#Input 6
             break
         code=i["artwork"]
         artwork=artwork_dict[code]
-        artists_ids=artwork['constituent_id'][1:-1].replace(' ', '').split(',')
         names=[]
         for artist in transportation[2][code]:
             names.append(artist["name"])
-            print("a",names, type(names))
         names=str(names)
         tb.add_row([code,artwork["title"],names[1:len(names)-1].replace("'",""),artwork["medium"],artwork["date"],artwork["dimensions"],
         artwork["classification"],i["cost"],artwork["url"]])
