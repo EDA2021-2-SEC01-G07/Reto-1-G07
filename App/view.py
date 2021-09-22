@@ -26,7 +26,7 @@ import sys
 import controller
 from DISClib.ADT import list as lt
 assert cf
-
+import time
 """
 La vista se encarga de la interacción con el usuario
 Presenta el menu de opciones  y  por cada seleccion
@@ -49,22 +49,26 @@ def printMenu():
 def printLoadCatalog():#Input 1
     global catalog
     print("Cargando información de los archivos ....")
+    start_time = time.process_time()
     catalog = initCatalog()
     loadData(catalog)
+    end_time=(time.process_time() - start_time)*1000
     print('Numero de artistas cargados: ' + str(lt.size(catalog['artists'])))
     print('Numero de obras cargadas: ' + str(lt.size(catalog['artworks']))+"\n")
 
     print('Ultimos 3 artistas:\n' + str(lastArtist(catalog)))
     print('Ultimas 3 obras:\n' + str(lastArtwork(catalog)))
-
+    print("The processing time is: ",end_time, " ms.")
 def printCronologicallyArtists():#Input 2
     global catalog
     first=int(input("Año inicial: "))
     last=int(input("Año final: "))
+    start_time = time.process_time()
     print("="*15+ "Req No. 1 Inputs"+ "="*15)
     print("Artist born between "+ str(first)+" and " +str(last))
     print("="*15, "Req No. 1 Answers", "="*15)
     cronologicalArtists=controller.cronologicalArtists(catalog,first,last)
+    end_time=(time.process_time() - start_time)*1000
     print("Total de artistas: ", cronologicalArtists[1])
     table= pt.PrettyTable()
     table.field_names=["ConstituentID","DisplayName","BeginDate","Nationality","Gender","ArtistBio","Wiki QID","ULAN"]
@@ -73,6 +77,7 @@ def printCronologicallyArtists():#Input 2
         line=lt.getElement(cronologicalArtists[0],n)
         table.add_row([line["id"],line["name"],line["begin_date"],line["nationality"],line["gender"],line["biography"],line["wiki_id"],line["ulan"]])
     print(table)
+    print("The processing time is: ",end_time, " ms.")
 
 def printCronologicallyArtworks():#Input 3
     global catalog
@@ -85,7 +90,7 @@ def printCronologicallyArtworks():#Input 3
     lastM=int(input("Mes final: "))
     lastD=int(input("Dia final: "))
     last=dt.date(lastY,lastM,lastD)
-
+    start_time = time.process_time()
     print("="*15+ "Req No. 2 Inputs"+ "="*15)
     print("Artwork aquired between "+ str(first)+" and " +str(last))
     print("="*15, "Req No. 2 Answers", "="*15)
@@ -96,6 +101,7 @@ def printCronologicallyArtworks():#Input 3
     print("The first and last 3 artists in the range are...")
     artist_dict=controller.getArtistDict(catalog["artists"])
     controller.addArtworkArtists(foundArtwork,artist_dict)
+    end_time=(time.process_time() - start_time)*1000
     table= pt.PrettyTable()
     table.field_names=["ObjectID","Title","ArtistsNames","Medium","Dimensions","Date","DateAquired","URL"]
     table.max_width=40
@@ -106,11 +112,13 @@ def printCronologicallyArtworks():#Input 3
         table.add_row([line["id"],line["title"],names,line["medium"],line["dimensions"],line["date"],line["date_aquired"],line["url"]])
     table._max_width={"ObjectID":17,"Title":17,"ArtistsNames":17,"Medium":21,"Dimensions":21,"Date":17,"DateAquired":17,"URL":21}
     print(table)
+    print("The processing time is: ",end_time, " ms.")
 
 def printArtistMediums():#Input 4
     global catalog
     print("="*15 + " Req No. 3 Inputs " + "="*15)
     artist_name = input("Examine the work of the artist named: ")
+    start_time = time.process_time()
     artist = controller.getArtist(catalog, artist_name)
     top_artworks, medium_ranking = controller.techniquesFromArtist(catalog, artist)
     artist_id = artist['id']
@@ -118,7 +126,7 @@ def printArtistMediums():#Input 4
     total_artworks = 0
     for ranking in lt.iterator(medium_ranking):
         total_artworks += ranking['len']
-
+    end_time=(time.process_time() - start_time)*1000
     print(f'''\n{"="*15} Req No. 3 Answer {"="*15}n
 {artist_name} with MoMA ID {artist_id} has {total_artworks} in his/her name at the museum\n
 There are {lt.size(medium_ranking)} different mediums/techniques in his/her work.\n
@@ -153,15 +161,17 @@ Her/His top 5 Medium/Technique are:''')
         tb.add_row([row['id'], row['title'], row['medium'], row['date'], row['dimensions'],
          row['date_aquired'], row['department'], row['classification'], row['url']])
     print(tb)
+    print("The processing time is: ",end_time, " ms.")
 
 def printArtworkNationality():#Input 5
     global catalog
+    start_time = time.process_time()
     nationalities=controller.sortByNationality(catalog)
     print("="*15+ "Req No. 4 Inputs"+ "="*15)
     print("Ranking countries by their number of artworks in the MoMA...\n")
     print("="*15, "Req No. 4 Answers", "="*15)
     print("The TOP 10 Countries in the MoMA are:")
-    
+    end_time=(time.process_time() - start_time)*1000
     table= pt.PrettyTable()
     table.field_names=["Nationality","Artworks"]
     table.hrules = pt.ALL
@@ -183,10 +193,12 @@ def printArtworkNationality():#Input 5
     table2._max_width={"ObjectID":17,"Title":17,"ArtistsNames":18,"Medium":18,"Date":17,"Dimensions":18,"Department":15,"Classification":17,"URL":22}
     table2.hrules = pt.ALL
     print(table2)
+    print("The processing time is: ",end_time, " ms.")
 
 def printcostFromDepartment():#Input 6
     global catalog
     department= input("Search for department named: ")
+    start_time = time.process_time()
     transportation=controller.costFromDepartment(catalog,department)
     artwork_dict=controller.getArtworkDict(catalog["artworks"])
     artist_dict=controller.getArtistDict(catalog["artists"])
@@ -206,16 +218,16 @@ def printcostFromDepartment():#Input 6
      'Classifications', 'TransCost (USD)', 'URL']
     contador=0
     controller.addArtworkArtists(transportation[1],artist_dict)
+    end_time=(time.process_time() - start_time)*1000
     for i in lt.iterator(transportation[0]):
         if contador >4:
             break
         code=i["artwork"]
         artwork=artwork_dict[code]
-        artists_ids=artwork['constituent_id'][1:-1].replace(' ', '').split(',')
+        
         names=[]
         for artist in transportation[2][code]:
             names.append(artist["name"])
-            print("a",names, type(names))
         names=str(names)
         tb.add_row([code,artwork["title"],names[1:len(names)-1].replace("'",""),artwork["medium"],artwork["date"],artwork["dimensions"],
         artwork["classification"],i["cost"],artwork["url"]])
@@ -242,6 +254,7 @@ def printcostFromDepartment():#Input 6
     tb2._max_width ={'ObjectID':17, 'Title':17,"ArtistsNames":17, 'Medium':17, 'Date':17, 'Dimensions':17,
      'Classifications':17, 'TransCost (USD)':17, 'URL':17}
     print(tb2)
+    print("The processing time is: ",end_time, " ms.")
     
 def initCatalog():
     """
