@@ -100,6 +100,7 @@ def printCronologicallyArtworks():
     for n in range(1,7):
         line=lt.getElement(foundArtwork, n)
         table.add_row([line["id"],line["title"],"None",line["medium"],line["dimensions"],line["date"],line["date_aquired"],line["url"]])
+    table._max_width={"ObjectID":17,"Title":17,"ArtistsNames":17,"Medium":21,"Dimensions":21,"Date":17,"DateAquired":17,"URL":21}
     print(table)
 
 def printArtistMediums():
@@ -179,6 +180,10 @@ def printArtworkNationality():
     table2.hrules = pt.ALL
     print(table2)
 
+def printcostFromDepartment():
+    global catalog
+    transportation=controller.costFromDepartment(catalog)
+    pass
 def initCatalog():
     """
     Inicializa el catalogo de libros
@@ -220,6 +225,8 @@ while True:
         printArtistMediums()
     elif int(inputs[0])==5:
         printArtworkNationality()
+    elif int(inputs[0])==6:
+        printcostFromDepartment()
     else:
         sys.exit(0)
 

@@ -96,3 +96,6 @@ def sortByNationality(catalog):
     
 def techniquesFromArtist(catalog, artist):
     return model.getMediumsByArtist(catalog, artist)
+
+def costFromDepartment(catalog):
+    return model.costFromDepartment(catalog)
